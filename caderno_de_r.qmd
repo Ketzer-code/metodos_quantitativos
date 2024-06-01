@@ -1,0 +1,775 @@
+---
+title: "Caderno de R"
+author: "Lucas Ketzer dos Reis"
+format: html
+---
+# AULA 2
+
+**OBS: nao foram utilizados acentos ortograficos para evitar erros ou caracteres nao reconhecidos no envio das tarefas**
+
+## GRAFICOS COM GGPLOT2
+No vídeo, ha uma breve explicacao da base de dados que sera utilizada e como ela sera manipulada usando dplyr para a construcao dos graficos.
+
+Em seguida, ha uma explicacao da logica de camadas do ggplot2. Essa logica consiste no fato de que graficos em R sao construidos em camadas, com uma camada "em branco" sendo inicializada por um objeto ggplot que vai sendo incrementado com as camadas de dados (que definem quais dados serao utilizados na construcao do grafico), estetica (que definem quais variaveis vao em quais eixos, se estao agrupadas por alguma outra variavel ou nao, etc) e geometrica/geom, que efetivamente define qual sera o tipo de grafico.
+
+Vale notar que diferentes geoms podem ser combinados em um mesmo grafico, e que a estetica pode ser declarada dentro de cada geom ou dentro do proprio objeto ggplot que inicializa o grafico.
+
+O primeiro grafico apresentado eh o grafico de pontos, que comumente eh utilizado para fazer graficos de dispersao:
+```{r}
+#| label: grafico-1
+#| fig-cap: "Grafico de pontos/dispersao"
+#| warning: false
+
+library(tidyverse)
+
+base <- read.csv("LucroFilmes.csv", sep = ";")
+
+base <- base %>%
+          mutate(DataLancamento = as.Date(DataLancamento, format = "%m/%d/%Y")) %>%
+          mutate(
+            AnoLancamento = format(DataLancamento, "%Y"),
+            MesLancamento = format(DataLancamento, "%m"),
+            LucroLocal = as.numeric(LucroLocal), 
+            LucroMundial = as.numeric(LucroMundial)
+          )
+
+ggplot(base) +
+  geom_point(aes(LucroLocal, LucroMundial))
+```
+
+Em seguida, sao apresentados os graficos:
+
+Histograma: Utilizado para avaliar distribuicoes de frequencias, a base do retangulo representa a faixa/classe da variavel estudada e a altura a quantidade do conjunto que se encontra nessa classe/faixa.
+
+```{r}
+#| label: grafico-2
+#| fig-cap: "Histograma"
+#| warning: false
+ggplot(base) +
+  geom_histogram(aes(Genero), stat = "count")
+```
+Grafico de barras: Um tipo de grafico bastante comum, onde as barras representam proporcionalmente os valores apresentados. Pode ser utilizado tanto com valores absolutos quanto com percentuais, podendo tambem ser agrupado/empilhado.
+
+```{r}
+#| label: grafico-3
+#| fig-cap: "Grafico de barras"
+#| warning: false
+ggplot(base)  +
+  geom_bar(aes(Distribuidor), stat = "count")
+```
+
+Boxplot/Diagrama de caixa: Um tipo de grafico bastante util em que se pode visualizar a distribuicao de um dado - o grafico indica os valores minimos e maximos, mediana e os percentis 25 e 75, alem de outliers.
+
+```{r}
+#| label: grafico-4
+#| fig-cap: "Boxplot/Diagrama de caixa"
+#| warning: false
+ggplot(base) + 
+  geom_boxplot(aes(Classificacao, LucroMundial))
+```
+Grafico de linha: Normalmente utilizado para demonstrar a evolucao de alguma variavel ao longo do tempo.
+
+```{r}
+#| label: grafico-5
+#| fig-cap: "Grafico de linha"
+#| warning: false
+ggplot(base) + 
+  geom_line(aes(AnoLancamento, group = 1), stat = "count")
+```
+
+O restante do video eh dedicado a personalizacao de parametros do grafico, como tamanho, cor, preenchimento, titulo, legendas etc. Ha tambem uma secao demonstrando como combinar geoms, com esteticas especificas em cada um deles - tambem eh demonstrado como filtrar dados especificos antes da geracao do grafico e como adicionar estatisticas sumarias.
+
+A fim de manter a brevidade, todos esses parametros serao demonstrados em um unico grafico de autoria propia:
+```{r}
+#| label: grafico-6
+#| fig-cap: "Grafico final"
+#| warning: false
+base %>%
+  filter(as.numeric(AnoLancamento) >= 2000) %>%
+  group_by(Distribuidor) %>%
+  mutate(total_filmes = n()) %>%  # usando esses dados p/ ver as dez maiores, as demais, serao agrupadas em outros
+  ungroup() %>%
+  mutate(distribuidor_agrupado = ifelse(
+    total_filmes < 68, "Outros", Distribuidor
+  )) %>%
+  group_by(distribuidor_agrupado, Genero) %>%
+  summarise(lucro_medio_por_genero = mean(LucroMundial, na.rm = TRUE)) %>%
+  mutate(lucro_medio_por_genero = round(lucro_medio_por_genero / 100000)) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_point(aes(distribuidor_agrupado, lucro_medio_por_genero, color = Genero)) +
+  geom_text(aes(distribuidor_agrupado, lucro_medio_por_genero, label = lucro_medio_por_genero, color = Genero), hjust = -.05, vjust = 1) +
+  labs(
+    title = "LUCRO MEDIO MUNDIAL DAS DISTRIBUIDORAS POR GENERO",
+    x = "DISTRIBUIDORA",
+    y = "LUCRO MEDIO (MILHPES DE DOLARES)",
+    color = "GENERO" 
+  ) +
+  scale_y_continuous(breaks = seq(0, 3500, by = 500), label = paste0(seq(0, 3500, by = 500), "MM")) +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+# AULA 3 
+
+## EXERCICIO 1
+Reescrever o comando abaixo usando %>%:
+```{r}
+#| warning: false
+length(unique(iris$Species))
+```
+```{r}
+iris %>%
+  pull(Species) %>%
+  unique() %>%
+  length()
+```
+
+## EXERCICIO 2
+Verificar outras paletas de cores e temas e escolher um preferido para o grafico abaixo
+```{r}
+ggplot(iris, aes(Sepal.Width, Sepal.Length, col = Species)) +
+  geom_point() +
+  ggthemes::theme_few() + 
+  ggthemes::scale_color_solarized()
+```
+```{r}
+ggplot(iris, aes(Sepal.Width, Sepal.Length, col = Species)) +
+  geom_point() +
+  ggthemes::theme_gdocs() +
+  scale_color_brewer(palette = "Accent")
+```
+
+## EXERCICIO 3
+
+### 1) Encontrar todos os voos que
+#### a) Atrasaram duas horas ou mais  
+```{r}
+nycflights13::flights %>%
+  mutate(
+    arr_delay_hours = arr_delay / 60
+  ) %>%
+  filter(arr_delay_hours >= 2) %>%
+  distinct(flight) %>%
+  pull() %>%
+  unique() %>%
+  length()
+``` 
+#### b) Voaram para Houston (IAH ou HOU)
+```{r}
+nycflights13::flights %>%
+  filter(dest %in% c("IAH", "HOU")) %>%
+  distinct(flight) %>%
+  pull() %>%
+  unique() %>%
+  length()
+```
+#### c) Foram operados pelas cias United, American ou Delta
+```{r}
+nycflights13::flights %>% 
+  inner_join(nycflights13::airlines, by = "carrier") %>%
+  filter(
+    grepl("United", name) | grepl("American", name) | grepl("Delta", name)
+  ) %>%
+  distinct(flight) %>%
+  pull() %>%
+  unique() %>% 
+  length()
+```
+#### d) Partiram entre meia noite e 6 da manha
+```{r}
+nycflights13::flights %>%
+  filter((dep_time >= 0 & dep_time <= 600) | (dep_time %in% c(24, 2400))) %>%
+  distinct(flight) %>%
+  pull() %>%
+  unique() %>%
+  length()
+```
+### 2) O que faz a funcao auxiliar do dplyr between? Pode ser util para simplificar os codigos escritos? Mostre
+
+A funcao between(x, esquerda, direita) eh o equivalente a escrever, para uma variavel qualquer, que x >= esquerda & x <= direita - ou seja, eh o equivalente a declarar que a variavel x deve estar entre os dois valores especificados. Ela pode ser utilizada para auxiliar a responder o item d) da primeira pergunta:
+```{r}
+nycflights13::flights %>%
+  filter(between(dep_time, 0, 600) | (dep_time %in% c(24, 2400))) %>%
+  distinct(flight) %>%
+  pull() %>%
+  unique() %>%
+  length()
+```
+
+### 3) Quantos voos tem horario de partida faltando? Ha outras variaveis faltando? O que estas linhas provavelmente representam?
+
+Existem 1906 voos sem informacao de horario de partida. Alem das informacoes de horario de partida, tambem nao ha informacoes sobre atrasos na partida, horario de chegada, atrasos na chegada e tempo total de voo - possivelmente se tratam de voos cancelados, remarcados, etc.
+```{r}
+nycflights13::flights %>%
+  filter(is.na(dep_time)) %>%
+  distinct(flight) %>%
+  pull() %>%
+  unique() %>%
+  length()
+```
+
+### 4) Encontre os seis voos que mais chegaram atrasados
+```{r}
+nycflights13::flights %>%
+  arrange(desc(arr_delay)) %>%
+  distinct(flight, .keep_all = T) %>%
+  select(flight, arr_delay) %>%
+  head(6)
+```
+
+### 5) Ordene o arquivo para encontrar os voos mais rapidos
+```{r}
+nycflights13::flights %>%
+  arrange(air_time) %>%
+  distinct(flight, .keep_all = T) %>%
+  select(flight, air_time) %>%
+  head(5)
+```
+
+### 6) Quais voos viajaram mais longe? E quais viajaram para mais perto?
+Voos mais distantes:
+```{r}
+nycflights13::flights %>%
+  arrange(desc(distance)) %>%
+  mutate(
+    distance_km = distance * 1.60934
+  ) %>%
+  distinct(flight, .keep_all = T) %>%
+  select(flight, distance, distance_km) %>%
+  head(5)
+```
+Voos mais proximos:
+```{r}
+nycflights13::flights %>%
+  arrange(distance) %>%
+  mutate(
+    distance_km = distance * 1.60934
+  ) %>%
+  distinct(flight, .keep_all = T) %>%
+  select(flight, distance, distance_km) %>%
+  head(5)
+``` 
+
+### 7) O que ocorre se voce repetir uma variavel multiplas vezes em uma instrucao select?
+A variavel eh selecionada apenas uma vez:
+```{r}
+nycflights13::flights %>%
+  select(flight, flight)
+```
+
+### 8) O que faz a funcao one_of()? Como poderia ser util na utilizacao com esse vetor? vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+A funcao one_of() (atualmente depreciada em favor de all_of() ou any_of()) permite selecionar colunas de um dataframe pelo seus nomes, inclusive se estiverem contidas em um vetor. No exemplo acima:
+```{r}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay") 
+
+nycflights13::flights %>%
+  select(flight, any_of(vars)) %>%
+  head(5)
+
+nycflights13::flights %>%
+  select(flight, all_of(vars)) %>%
+  head(5)
+```
+
+### 9) Como o resultado da execucao do codigo abaixo o surpreendeu? Como podes alterar o padrao da caixa alta e baixa?
+```{r}
+select(nycflights13::flights, contains("TIME"))
+```
+Apesar do codigo estar selecionando TIME em caixa alta, ele retorna todas as variaveis que contem a string TIME, independentemente de estarem em caixa alta ou baixa. Para alterar os nomes das colunas de caixa baixa para caixa alta, podemos fazer:
+```{r}
+nycflights13::flights %>%
+  rename_with(toupper) %>%
+  glimpse()
+``` 
+
+# AULA 4
+## EXERCICIO 1
+### 1) Como as variaveis e observacoes sao usadas em cada uma das tabelas de amostra?
+
+Na tabela 1, cada variavel possui sua propria coluna e cada observacao tem sua propria linha. 
+
+Na tabela 2, as variaveis populacao e casos sao consolidadas na coluna tipo, de forma que as observacoes
+por ano sao repetidas.
+
+Na tabela 3, as variaveis populacao e casos estao consolidadas na coluna rate, de forma que os casos estao
+no numerador da observacao e a populacao no denominador.
+
+Na tabela 4a, temos os anos como variaveis e os casos como observacao. Na tabela 4b, tambem temos os anos como
+variaveis, porem a populacao como observacoes.
+
+```{r}
+table1
+table2
+table3
+table4a
+table4b
+```
+
+### 2) Calcule a razao para table2 e table4a + table4b.
+```{r}
+table2 %>%
+  pivot_wider(names_from = type, values_from = count) %>%
+  mutate(rate = cases / population)
+```
+```{r}
+table4a %>%
+  pivot_longer(cols = c("1999", "2000")) %>%
+  rename(year = name, cases = value) %>%
+  inner_join(
+    table4b %>%
+    pivot_longer(cols = c("1999", "2000")) %>%
+    rename(year = name, population = value),
+    by = c("year", "country")
+  ) %>%
+  mutate(rate = cases / population)
+```
+
+### 3) Extraia o numero de casos de tuberculose (cases) por pais por ano.
+Extraia a população correspondente por pais por ano. Divida os casos por
+populacao e multiplique por 10000. Guarde de volta no local apropriado.
+Com qual representacao eh mais facil trabalhar? Qual eh o mais dificil?
+Por que?
+
+```{r}
+table1 %>%
+  group_by(country, year) %>%
+  mutate(
+    cases_per_10k = (cases / population) * 10000 
+  ) %>%
+  ungroup()
+
+table2 %>%
+    pivot_wider(names_from = type, values_from = count) %>%
+    group_by(country, year) %>%
+    mutate(
+     cases_per_10k = (cases / population) * 10000
+    ) %>%
+    ungroup()
+
+table3 %>%
+  separate(rate, into = c("cases", "population"), sep = "/") %>%
+  mutate(
+    cases = as.numeric(cases),
+    population = as.numeric(population)
+  ) %>% 
+  group_by(country, year) %>%
+  mutate(
+    cases_per_10k = (cases / population) * 10000
+  ) %>%
+  ungroup()
+
+table4a %>%
+  pivot_longer(cols = c("1999", "2000")) %>%
+  rename(year = name, cases = value) %>%
+  inner_join(
+    table4b %>%
+    pivot_longer(cols = c("1999", "2000")) %>%
+    rename(year = name, population = value),
+    by = c("year", "country")
+  ) %>%
+  group_by(country, year) %>%
+  mutate(
+    cases_per_10k = (cases / population) * 10000
+  ) %>%
+  ungroup()
+```
+A representacao mais facil de trabalhar eh a tabela 1 e a mais dificil a tabela 4. A 1 eh mais facil de ser trabalhada porque ja esta num formato tidy (uma observacao por linha e uma coluna para cada variavel), enquanto a tabela 4 precisa ser tratada e unificada numa tabela so, ja que as variaveis estao em tabelas diferentes e nao estao em colunas.
+
+### 4) Recrie o grafico mostrando a mudança nos casos ao longo do tempo
+usando table2 em vez de table1. O que você precisa fazer primeiro?
+
+A primeira coisa a ser feita eh separar a coluna type em duas colunas distintas, para que seja possivel plotar os casos de forma separada da populacao.
+```{r}
+table2 %>%
+    pivot_wider(names_from = type, values_from = count) %>%
+    ggplot(., aes(year, cases)) +
+    geom_line(aes(group = country), colour = "grey50") +
+    geom_point(aes(colour = country))
+```
+
+## EXERCICIO 2
+### 1) Porque *pivot_longer()* e *pivot_wider()* nao sao perfeitamente
+simetricas? Considere cudadosamente o seguinte exemplo:
+```{r, eval= FALSE, include=TRUE} 
+stocks <- tibble(
+    year = c(2015, 2015, 2016, 2016), 
+    half = c( 1, 2, 1, 2), 
+    return = c(1.88, 0.59, 0.92, 0.17) 
+  ) 
+stocks %>%
+  pivot_wider(names_from = year, values_from = return) %>%
+  pivot_longer(`2015`:`2016`, names_to = "year", values_to = "return")
+```
+As funcoes nao sao perfeitamente simetricas porque no dataframe original a coluna "year" eh do tipo numerico (double) - ao se executar o pivot_wider, em que os anos sao convertidos para nomes de colunas, os anos se tornam do tipo caractere (str), fazendo com que a operacao final se torne assimetrica em relacao ao dataframe original (onde o ano era uma variavel numerica). As operacoes tambem sao assimetricas na medida em que a ordem das colunas eh alterada.
+
+### 2) Porque este codigo falha?
+table4a %>% 
+  pivot_longer(c(1999, 2000), names_to = "year", values_to = "cases")
+
+O codigo falha porque declara o nome das colunas a serem transformadas como valores numericos, o que faz com que o R interprete como se estivessemos declarando a posicao das colunas. Para que a operacao seja executada corretamente, os nomes das colunas devem ser declarados como str.
+
+### 3) O que aconteceria ao usar a funcao *pivot_wider* na tabela abaixo? Como poderia consertar incluindo uma coluna?
+```{r}
+people <- tribble(
+  ~name,              ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",     "age",       45,
+  "Phillip Woods",     "height",   186,
+  "Phillip Woods",     "age",       50,
+  "Jessica Cordero",   "age",       37,
+  "Jessica Cordero",   "height",   156
+)
+
+people %>%
+  pivot_wider(names_from = key, values_from = value)
+
+```
+
+Ocorreria um erro porque o mesmo valor para a mesma chave esta especificado mais de uma vez - isso poderia ser corrigido ao se adicionar uma coluna "id" para diferenciar pessoas com o mesmo nome:
+```{r}
+people <- tribble(
+  ~name,             ~id, ~key,    ~value,
+  #-----------------|----|--------|------
+  "Phillip Woods",     1, "age",       45,
+  "Phillip Woods",     1, "height",   186,
+  "Phillip Woods",     2,"age",       50,
+  "Jessica Cordero",   3,"age",       37,
+  "Jessica Cordero",   3,"height",   156
+)
+
+people %>%
+  pivot_wider(names_from = key, values_from = value)
+```
+### 4) Organize o tibble abaixo. Voce precisara utilizar *pivot_longer()* ou *pivot_wider()*? Quais sao as variaveis?
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+```
+Sera necessario usar a funcao pivot_longer, de modo que tenhamos as variaveis pregnant, gender e cases 
+```{r}
+preg %>%
+  pivot_longer(c("male", "female"), names_to = "gender", values_to = "cases")
+```
+
+### 5)  O que os argumentos "extra" e "fill" fazem em *separate( )*? Experimente as varias opcoes com os seguintes conjunto de dados.
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"))
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+ separate(x, c("one", "two", "three"))
+```
+
+O argumento "extra" eh utilizado para lidar com strings que contem um caractere a mais em relacao aos demais, sendo possivel ignorar o caractere extra ou fundi-lo a um dos caracteres remanescentes:
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"), extra = "merge")
+
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"), extra = "drop")
+```
+
+O argumento "fill" eh utilizado para lidar com strings que possuem um caractere a menos em relacao as demais, sendo possivel ignorar o caractere faltante ou substitui-lo por um caratcere a esquerda ou a direita:
+```{r}
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+ separate(x, c("one", "two", "three"), fill = "right")
+
+ tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+ separate(x, c("one", "two", "three"), fill = "left")
+```
+
+### 6)  Ambos *unite( )* e *separate( )* tem um argumento "remove". O que ele faz? Porque deve atribuir FALSE a ele?
+
+O argumento "remove" retira a coluna original que contem a string que esta sendo separada do dataframe. Deve-se atribuir FALSE a ele para que os dados originais sejam preservados no dataframe.
+
+### 7)  Compare e contraste *separate( )* e *extract( )*. Porque ha tres variacoes de separacao (por posicao, pelo separador, e com grupos), mas apenas um *unite( )*?
+
+A funcao extract separa uma coluna de caracteres em diversas colunas atraves de expressos regulares (REGEX), enquanto a funcao separate separa a coluna de caracteres atraves de um separador qualquer. Ha apenas um unite porque a funcao de unir uma serie de colunas de caracteres em uma so nao possui variacoes do tipo o separador que separa um caractere de outro ou um padrao especifico de caracteres que necessita ser extraido em diferentes colunas - eh necessario apenas especificar qual separador ira separar as strings unidas.
+
+### 8) Compare e contraste os argumento de *fill( )* aos de *pivot_wider( )* e *complete( )*.
+
+A funcao fill eh utilizada para preencher valores faltantes em um dataframe, com os argumentos data (o df), as colunas a serem preenchidas e a direcao em que serao preenchidas. 
+
+A funcao pivot_wider eh utilizada para aumentar o numero de colunas e reduzir o numero de linhas, com diversos argumentos, sendo os principais names_from (as novas colunas geradas), values_from (de onde sairao os valores das colunas geradas). Destaca-se nessa comparacao o argumento values_fill (o valor que deve substituir os valores faltantes)
+
+A funcao complete eh utilizada para revelar valores faltantes implicitos, isto eh, a funcao gera todas as combinacoes possiveis entre duas ou mais variaveis e revela valores faltantes. Neste comparativo, destaca-se o argumento fill, utilizado para preencher valores faltantes por algum valor designado.
+
+### 9)  O que faz o argumento direction em *fill( )*?
+
+O argumento direction define em que direcao os valores faltantes serao preenchidos - se for definido como down, o ultimo valor preenchido sera "arrastado" ate o proximo valor preenchido, se definido como "up" o valor preenchido sera "arrastado" ate preencher todos os valores faltantes acima dele, se definido como "downup" os valores faltantes seram preenchidos primeiro para baixo e depois para cima.
+
+
+# AULA 6
+## EXERCICIOS
+### 1) Encontre no Yahoo os tickers de Petrobras (a mais liquida), Vale, Friboi, Bradesco, e o indice Bovespa e armazene-os num vetor denominado "ativos".
+```{r}
+ativos <- c("PETR4.SA", "VALE3.SA", "JBSS3.SA", "BBDC3.SA", "^BVSP")
+```
+
+### 2) Obtenha os precos dos ativos do exercicio 1 para o ultimo ano.
+```{r}
+library(timetk)
+library(quantmod)
+library(tidyverse)
+library(tibbletime)
+prices <- getSymbols(
+  ativos,
+  src = "yahoo",
+  from = "2012-12-31",
+  to = "2017-12-31",
+  auto.assign = TRUE,
+  warnings = FALSE
+) %>%
+map(~Ad(get(.))) %>%
+reduce(merge) %>%
+"colnames<-"(ativos)
+```
+
+### 3) Suponha que uma ação caia 50% e depois sobe 50%, de quanto foi a variação total no período? dica(Componha o retorno destes dois períodos utilizando juros compostos.)
+
+Supondo que a ação valha R$ 100: após uma queda de 50%, a ação passa a valer R$ 50. Após uma valorização de 50%, passa a valer R$ 75. Fazendo (75 - 100) / 100 = -25%
+
+### 4) Suponha que uma acao caia 50% e depois sobe 50%, de quanto foi a variacao total no periodo? dica (utilize os log retornos)
+
+Utilizando a formula dos log retornos, partindo do exemplo acima, temos:
+```{r}
+log(75/ 100)
+```
+Convertendo para retorno linear:
+```{r}
+exp(log(75/100)) - 1
+```
+
+### 5) Utilize o ggplot2 e o codigo abaixo para obter a forma longa do objeto tidyverse desenvolvido no texto. Obtenha um histograma conjunto com uma cor por ativo utilizando os argumentos alpha=0.45 e binwidth = .005. Coloque o titulo de "Monthly Returns Since 2013"
+```{r}
+prices %>% 
+  to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  tbl_time(index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+  group_by(asset) %>%  
+  mutate(returns = (log(returns) - log(lag(returns)))) %>%
+  pivot_wider(names_from = asset, values_from = returns) %>% 
+  select(date, all_of(ativos)) %>% 
+  na.omit() %>%
+  pivot_longer(cols = all_of(ativos), names_to = "asset", values_to = "returns") %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_histogram(alpha = .45, binwidth = .005) +
+  labs(title = "Monthly Returns Since 2013")
+```
+
+### 6) Obtenha o grafico acima utilizando o conceito de ggplot2:facet_wrap().
+```{r}
+prices %>% 
+  to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  tbl_time(index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+  group_by(asset) %>%  
+  mutate(returns = (log(returns) - log(lag(returns)))) %>%
+  pivot_wider(names_from = asset, values_from = returns) %>% 
+  select(date, all_of(ativos)) %>% 
+  na.omit() %>%
+  pivot_longer(cols = all_of(ativos), names_to = "asset", values_to = "returns") %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_histogram(alpha = .45, binwidth = .005) +
+  facet_wrap(. ~ asset) +
+  labs(title = "Monthly Returns Since 2013") 
+```
+
+### 7) Refaca os dois exercicios para a carteira com ativos brasileiros (ja foi feito, analise da carteira escolhida no final do caderno)
+
+### 8) Obtenha o grafico das densidades das distribuicoes dos ativos do objeto tidyverse desenvolvido coloque o titulo: "Monthly Returns Density Since 2013"e para o eixo x: "monthly returns" e y: "distribution".
+
+```{r}
+prices %>% 
+  to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  tbl_time(index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+  group_by(asset) %>%  
+  mutate(returns = (log(returns) - log(lag(returns)))) %>%
+  pivot_wider(names_from = asset, values_from = returns) %>% 
+  select(date, all_of(ativos)) %>% 
+  na.omit() %>%
+  pivot_longer(cols = all_of(ativos), names_to = "asset", values_to = "returns") %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_density(alpha = .45) +
+  labs(
+    title = "Monthly Returns Density Since 2013",
+    x = "monthly returns",
+    y = "distribution"
+  ) 
+```
+
+### 9) Combine para os ativos do portfolio utilizando o ggplot2::facetwrap os histogramas e densidades. Utilize titulo: "Monthly Returns Density Since 2013"e para o eixo x: "monthly returns" e y: "distribution".
+```{r}
+prices %>% 
+  to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+  tbl_time(index = "date") %>%
+  pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+  group_by(asset) %>%  
+  mutate(returns = (log(returns) - log(lag(returns)))) %>%
+  pivot_wider(names_from = asset, values_from = returns) %>% 
+  select(date, all_of(ativos)) %>% 
+  na.omit() %>%
+  pivot_longer(cols = all_of(ativos), names_to = "asset", values_to = "returns") %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_density(alpha = .45) +
+  geom_histogram(alpha = .45, binwidth = .005) +
+  facet_wrap(. ~ asset) +
+  labs(
+    title = "Monthly Returns Density Since 2013",
+    x = "monthly returns",
+    y = "distribution"
+  ) 
+```
+
+### 10) Analise da carteira escolhida
+
+Comecamos escolhendo os tickers dos ativos no yahoofinance:
+
+```{r}
+ativos <- c("ITUB4.SA", "WEGE3.SA", "PRIO3.SA", "EMBR3.SA", "^BVSP")
+```
+
+As empresas sao, respectivamente: Itau, Weg, PetroRio e Embraer, com o indice ibovespa como comparativo. Em seguida, obtemos os retornos dos ultimos 5 anos:
+
+```{r}
+library(lubridate)
+
+prices <- getSymbols(
+  ativos,
+  src = "yahoo",
+  from = (today() - 1) %m-% years(5),
+  to = today() - 1,
+  auto.assign = TRUE,
+  warnings = FALSE
+) %>%
+map(~Ad(get(.))) %>%
+reduce(merge) %>%
+"colnames<-"(ativos)
+```
+
+Com os precos em maos, calculamos os retornos mensais:
+```{r}
+prices_monthly <- prices %>% 
+                      to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+                      tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+                      tbl_time(index = "date") %>%
+                      pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+                      group_by(asset) %>%  
+                      mutate(returns = (log(returns) - log(lag(returns))))
+```
+
+Nota-se que ha alguns valores nulos. P/ evitar problemas de visualizacao, omitimos os valores nulos
+
+```{r}
+prices_monthly <- prices_monthly %>%
+                    na.omit()
+```
+
+Alem dos log retornos, eh interessante calcular os retornos lineares:
+
+```{r}
+prices_monthly <- prices_monthly %>%
+                    mutate(linear_returns = exp(returns) - 1) %>%
+                    ungroup()
+```
+
+Apos o tratamento, 5 meses foram perdidos, o que no total nao prejudica a totalidade da analise. Agora iremos visualizar os log retornos uttilizando o pacote highcharter:
+
+```{r highchart visualization}
+library(highcharter)
+
+chart <- highchart(type = "stock") %>%
+          hc_title(text = "Monthly Log Returns in the last 5 years")
+
+# ao inves de adicionar cada ativo manualmente, usamos um loop
+
+for (a in ativos) {
+  series_data <- prices_monthly %>%
+                  filter(asset == !!a) %>%
+                  select(date, returns)
+
+  chart <- chart %>%
+            hc_add_series(
+              data = list_parse2(series_data),
+              name = a,
+              type = "line"
+            )
+}
+
+chart %>%
+  hc_add_theme(hc_theme_flat()) %>% 
+  hc_navigator(enabled=FALSE) %>% 
+  hc_scrollbar(enabled=FALSE) %>% 
+  hc_exporting(enabled=FALSE) %>% 
+  hc_legend(enabled=TRUE)
+```
+
+Pela analise visual, podemos observar que boa parte dos ativos mantiveram performance acima do ibov - no entanto, eh necessario realizar algum tipo de analise descritiva para confirmar:
+```{r}
+prices_monthly %>%
+  select(-linear_returns) %>%
+  pivot_wider(names_from = "asset", values_from = "returns") %>%
+  mutate(across(2:5, ~if_else(.x > !!sym("^BVSP"), 1, 0), .names = "{.col}_superior_ibov")) %>%
+  select(-all_of(ativos)) %>%
+  pivot_longer(cols = ends_with("superior_ibov"), values_to = "outperforms_ibov") %>%
+  mutate(name = str_replace(name, "_superior_ibov", "")) %>%
+  group_by(name) %>%
+  summarise(
+    outperforms_ibov = sum(outperforms_ibov),
+    total_months = length(date),
+    total_months_outperforming = sum(outperforms_ibov) / length(date)
+  )
+```
+
+Vemos que todos os ativos superaram a performance do indice BOVESPA em 50% do periodo, com destaque para PetroRio, que superou a performance do indice em 63% do periodo.
+
+Continuando as visualizacoes, uma boa forma de verificar a volatilidade dos ativos eh utilizando um histograma:
+
+```{r}
+hc_hist_fun <- function(asset_nm, df, color){
+  hist_tmp <- hist(
+    df %>% filter(asset == asset_nm) %>% select(returns) %>% pull(),
+    breaks = 50,
+    plot = FALSE
+  )
+
+  hchart(hist_tmp, color = color) %>%
+  hc_title(text = paste(asset_nm, "Log Returns Distribution", sep = " ")) %>%
+  hc_add_theme(hc_theme_flat()) %>%
+  hc_exporting(enabled = FALSE) %>%
+  hc_legend(enabled = TRUE)
+}
+
+map(ativos, hc_hist_fun, prices_monthly, "blue")
+```
+
+Para facilitar a visualizacao, podemos refaze-la com ggplot2:
+```{r}
+prices_monthly %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_histogram(alpha = .45) +
+  facet_wrap(. ~ asset) +
+  labs(title = "Monthly Returns Since 2019") 
+```
+
+Analisando os histogramas, percebemos que o ativo da empresa Itau possui os retornos mais consistentes (no sentido de, menos volateis), enquanto a empresa PetroRio e Embraer apresentam mais volatilidade. Para incrementar essa visualizacao, podemos incluir a densidade de retornos:
+
+```{r}
+prices_monthly %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_density(alpha = .45) +
+  geom_histogram(alpha = .45) +
+  facet_wrap(. ~ asset) +
+  labs(title = "Monthly Returns Since 2019", x = "Monthly Returns", y = "Distribution")
+```

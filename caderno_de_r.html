@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lucas Ketzer dos Reis">
+
+<title>Caderno de R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="caderno_de_r_files/libs/clipboard/clipboard.min.js"></script>
+<script src="caderno_de_r_files/libs/quarto-html/quarto.js"></script>
+<script src="caderno_de_r_files/libs/quarto-html/popper.min.js"></script>
+<script src="caderno_de_r_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="caderno_de_r_files/libs/quarto-html/anchor.min.js"></script>
+<link href="caderno_de_r_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="caderno_de_r_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="caderno_de_r_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="caderno_de_r_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="caderno_de_r_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="caderno_de_r_files/libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<script src="caderno_de_r_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="caderno_de_r_files/libs/proj4js-2.3.15/proj4.js"></script>
+<link href="caderno_de_r_files/libs/highcharts-9.3.1/css/motion.css" rel="stylesheet">
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/highcharts.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/highcharts-3d.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/highcharts-more.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/stock.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/map.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/data.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/exporting.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/offline-exporting.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/drilldown.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/item-series.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/overlapping-datalabels.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/annotations.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/export-data.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/funnel.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/heatmap.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/treemap.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/sankey.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/dependency-wheel.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/organization.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/solid-gauge.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/streamgraph.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/sunburst.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/vector.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/wordcloud.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/xrange.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/tilemap.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/venn.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/gantt.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/timeline.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/parallel-coordinates.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/bullet.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/coloraxis.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/dumbbell.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/lollipop.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/series-label.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/plugins/motion.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/custom/reset.js"></script>
+<script src="caderno_de_r_files/libs/highcharts-9.3.1/modules/boost.js"></script>
+<script src="caderno_de_r_files/libs/highchart-binding-0.9.4/highchart.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Caderno de R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lucas Ketzer dos Reis </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="aula-2" class="level1">
+<h1>AULA 2</h1>
+<p><strong>OBS: nao foram utilizados acentos ortograficos para evitar erros ou caracteres nao reconhecidos no envio das tarefas</strong></p>
+<section id="graficos-com-ggplot2" class="level2">
+<h2 class="anchored" data-anchor-id="graficos-com-ggplot2">GRAFICOS COM GGPLOT2</h2>
+<p>No vídeo, ha uma breve explicacao da base de dados que sera utilizada e como ela sera manipulada usando dplyr para a construcao dos graficos.</p>
+<p>Em seguida, ha uma explicacao da logica de camadas do ggplot2. Essa logica consiste no fato de que graficos em R sao construidos em camadas, com uma camada “em branco” sendo inicializada por um objeto ggplot que vai sendo incrementado com as camadas de dados (que definem quais dados serao utilizados na construcao do grafico), estetica (que definem quais variaveis vao em quais eixos, se estao agrupadas por alguma outra variavel ou nao, etc) e geometrica/geom, que efetivamente define qual sera o tipo de grafico.</p>
+<p>Vale notar que diferentes geoms podem ser combinados em um mesmo grafico, e que a estetica pode ser declarada dentro de cada geom ou dentro do proprio objeto ggplot que inicializa o grafico.</p>
+<p>O primeiro grafico apresentado eh o grafico de pontos, que comumente eh utilizado para fazer graficos de dispersao:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"LucroFilmes.csv"</span>, <span class="at">sep =</span> <span class="st">";"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> base <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>          <span class="fu">mutate</span>(<span class="at">DataLancamento =</span> <span class="fu">as.Date</span>(DataLancamento, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>          <span class="fu">mutate</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">AnoLancamento =</span> <span class="fu">format</span>(DataLancamento, <span class="st">"%Y"</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">MesLancamento =</span> <span class="fu">format</span>(DataLancamento, <span class="st">"%m"</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">LucroLocal =</span> <span class="fu">as.numeric</span>(LucroLocal), </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">LucroMundial =</span> <span class="fu">as.numeric</span>(LucroMundial)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base) <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(LucroLocal, LucroMundial))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/grafico-1-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Grafico de pontos/dispersao</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Em seguida, sao apresentados os graficos:</p>
+<p>Histograma: Utilizado para avaliar distribuicoes de frequencias, a base do retangulo representa a faixa/classe da variavel estudada e a altura a quantidade do conjunto que se encontra nessa classe/faixa.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(Genero), <span class="at">stat =</span> <span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/grafico-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Histograma</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Grafico de barras: Um tipo de grafico bastante comum, onde as barras representam proporcionalmente os valores apresentados. Pode ser utilizado tanto com valores absolutos quanto com percentuais, podendo tambem ser agrupado/empilhado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base)  <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(Distribuidor), <span class="at">stat =</span> <span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/grafico-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Grafico de barras</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Boxplot/Diagrama de caixa: Um tipo de grafico bastante util em que se pode visualizar a distribuicao de um dado - o grafico indica os valores minimos e maximos, mediana e os percentis 25 e 75, alem de outliers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(Classificacao, LucroMundial))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/grafico-4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Boxplot/Diagrama de caixa</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Grafico de linha: Normalmente utilizado para demonstrar a evolucao de alguma variavel ao longo do tempo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base) <span class="sc">+</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(AnoLancamento, <span class="at">group =</span> <span class="dv">1</span>), <span class="at">stat =</span> <span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/grafico-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Grafico de linha</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>O restante do video eh dedicado a personalizacao de parametros do grafico, como tamanho, cor, preenchimento, titulo, legendas etc. Ha tambem uma secao demonstrando como combinar geoms, com esteticas especificas em cada um deles - tambem eh demonstrado como filtrar dados especificos antes da geracao do grafico e como adicionar estatisticas sumarias.</p>
+<p>A fim de manter a brevidade, todos esses parametros serao demonstrados em um unico grafico de autoria propia:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>base <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">as.numeric</span>(AnoLancamento) <span class="sc">&gt;=</span> <span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Distribuidor) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_filmes =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span>  <span class="co"># usando esses dados p/ ver as dez maiores, as demais, serao agrupadas em outros</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">distribuidor_agrupado =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    total_filmes <span class="sc">&lt;</span> <span class="dv">68</span>, <span class="st">"Outros"</span>, Distribuidor</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(distribuidor_agrupado, Genero) <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">lucro_medio_por_genero =</span> <span class="fu">mean</span>(LucroMundial, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lucro_medio_por_genero =</span> <span class="fu">round</span>(lucro_medio_por_genero <span class="sc">/</span> <span class="dv">100000</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(distribuidor_agrupado, lucro_medio_por_genero, <span class="at">color =</span> Genero)) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(distribuidor_agrupado, lucro_medio_por_genero, <span class="at">label =</span> lucro_medio_por_genero, <span class="at">color =</span> Genero), <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">05</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"LUCRO MEDIO MUNDIAL DAS DISTRIBUIDORAS POR GENERO"</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"DISTRIBUIDORA"</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"LUCRO MEDIO (MILHPES DE DOLARES)"</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"GENERO"</span> </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3500</span>, <span class="at">by =</span> <span class="dv">500</span>), <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3500</span>, <span class="at">by =</span> <span class="dv">500</span>), <span class="st">"MM"</span>)) <span class="sc">+</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/grafico-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Grafico final</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="aula-3" class="level1">
+<h1>AULA 3</h1>
+<section id="exercicio-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercicio-1">EXERCICIO 1</h2>
+<p>Reescrever o comando abaixo usando %&gt;%:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(iris<span class="sc">$</span>Species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+</section>
+<section id="exercicio-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercicio-2">EXERCICIO 2</h2>
+<p>Verificar outras paletas de cores e temas e escolher um preferido para o grafico abaixo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(Sepal.Width, Sepal.Length, <span class="at">col =</span> Species)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_few</span>() <span class="sc">+</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">scale_color_solarized</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(Sepal.Width, Sepal.Length, <span class="at">col =</span> Species)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_gdocs</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Accent"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercicio-3" class="level2">
+<h2 class="anchored" data-anchor-id="exercicio-3">EXERCICIO 3</h2>
+<section id="encontrar-todos-os-voos-que" class="level3">
+<h3 class="anchored" data-anchor-id="encontrar-todos-os-voos-que">1) Encontrar todos os voos que</h3>
+<section id="a-atrasaram-duas-horas-ou-mais" class="level4">
+<h4 class="anchored" data-anchor-id="a-atrasaram-duas-horas-ou-mais">a) Atrasaram duas horas ou mais</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">arr_delay_hours =</span> arr_delay <span class="sc">/</span> <span class="dv">60</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(arr_delay_hours <span class="sc">&gt;=</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight) <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2117</code></pre>
+</div>
+</div>
+</section>
+<section id="b-voaram-para-houston-iah-ou-hou" class="level4">
+<h4 class="anchored" data-anchor-id="b-voaram-para-houston-iah-ou-hou">b) Voaram para Houston (IAH ou HOU)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dest <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"IAH"</span>, <span class="st">"HOU"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 752</code></pre>
+</div>
+</div>
+</section>
+<section id="c-foram-operados-pelas-cias-united-american-ou-delta" class="level4">
+<h4 class="anchored" data-anchor-id="c-foram-operados-pelas-cias-united-american-ou-delta">c) Foram operados pelas cias United, American ou Delta</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(nycflights13<span class="sc">::</span>airlines, <span class="at">by =</span> <span class="st">"carrier"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grepl</span>(<span class="st">"United"</span>, name) <span class="sc">|</span> <span class="fu">grepl</span>(<span class="st">"American"</span>, name) <span class="sc">|</span> <span class="fu">grepl</span>(<span class="st">"Delta"</span>, name)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1666</code></pre>
+</div>
+</div>
+</section>
+<section id="d-partiram-entre-meia-noite-e-6-da-manha" class="level4">
+<h4 class="anchored" data-anchor-id="d-partiram-entre-meia-noite-e-6-da-manha">d) Partiram entre meia noite e 6 da manha</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>((dep_time <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> dep_time <span class="sc">&lt;=</span> <span class="dv">600</span>) <span class="sc">|</span> (dep_time <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">2400</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 753</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="o-que-faz-a-funcao-auxiliar-do-dplyr-between-pode-ser-util-para-simplificar-os-codigos-escritos-mostre" class="level3">
+<h3 class="anchored" data-anchor-id="o-que-faz-a-funcao-auxiliar-do-dplyr-between-pode-ser-util-para-simplificar-os-codigos-escritos-mostre">2) O que faz a funcao auxiliar do dplyr between? Pode ser util para simplificar os codigos escritos? Mostre</h3>
+<p>A funcao between(x, esquerda, direita) eh o equivalente a escrever, para uma variavel qualquer, que x &gt;= esquerda &amp; x &lt;= direita - ou seja, eh o equivalente a declarar que a variavel x deve estar entre os dois valores especificados. Ela pode ser utilizada para auxiliar a responder o item d) da primeira pergunta:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(dep_time, <span class="dv">0</span>, <span class="dv">600</span>) <span class="sc">|</span> (dep_time <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">2400</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 753</code></pre>
+</div>
+</div>
+</section>
+<section id="quantos-voos-tem-horario-de-partida-faltando-ha-outras-variaveis-faltando-o-que-estas-linhas-provavelmente-representam" class="level3">
+<h3 class="anchored" data-anchor-id="quantos-voos-tem-horario-de-partida-faltando-ha-outras-variaveis-faltando-o-que-estas-linhas-provavelmente-representam">3) Quantos voos tem horario de partida faltando? Ha outras variaveis faltando? O que estas linhas provavelmente representam?</h3>
+<p>Existem 1906 voos sem informacao de horario de partida. Alem das informacoes de horario de partida, tambem nao ha informacoes sobre atrasos na partida, horario de chegada, atrasos na chegada e tempo total de voo - possivelmente se tratam de voos cancelados, remarcados, etc.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(dep_time)) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1906</code></pre>
+</div>
+</div>
+</section>
+<section id="encontre-os-seis-voos-que-mais-chegaram-atrasados" class="level3">
+<h3 class="anchored" data-anchor-id="encontre-os-seis-voos-que-mais-chegaram-atrasados">4) Encontre os seis voos que mais chegaram atrasados</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(arr_delay)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight, <span class="at">.keep_all =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, arr_delay) <span class="sc">%&gt;%</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  flight arr_delay
+   &lt;int&gt;     &lt;dbl&gt;
+1     51      1272
+2   3535      1127
+3   3695      1109
+4    177      1007
+5   3075       989
+6   2391       931</code></pre>
+</div>
+</div>
+</section>
+<section id="ordene-o-arquivo-para-encontrar-os-voos-mais-rapidos" class="level3">
+<h3 class="anchored" data-anchor-id="ordene-o-arquivo-para-encontrar-os-voos-mais-rapidos">5) Ordene o arquivo para encontrar os voos mais rapidos</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(air_time) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight, <span class="at">.keep_all =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, air_time) <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  flight air_time
+   &lt;int&gt;    &lt;dbl&gt;
+1   4368       20
+2   4631       20
+3   4276       21
+4   4619       21
+5   2132       21</code></pre>
+</div>
+</div>
+</section>
+<section id="quais-voos-viajaram-mais-longe-e-quais-viajaram-para-mais-perto" class="level3">
+<h3 class="anchored" data-anchor-id="quais-voos-viajaram-mais-longe-e-quais-viajaram-para-mais-perto">6) Quais voos viajaram mais longe? E quais viajaram para mais perto?</h3>
+<p>Voos mais distantes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(distance)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">distance_km =</span> distance <span class="sc">*</span> <span class="fl">1.60934</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight, <span class="at">.keep_all =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, distance, distance_km) <span class="sc">%&gt;%</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  flight distance distance_km
+   &lt;int&gt;    &lt;dbl&gt;       &lt;dbl&gt;
+1     51     4983       8019.
+2     15     4963       7987.
+3    887     3370       5423.
+4    303     2586       4162.
+5   1865     2586       4162.</code></pre>
+</div>
+</div>
+<p>Voos mais proximos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(distance) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">distance_km =</span> distance <span class="sc">*</span> <span class="fl">1.60934</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(flight, <span class="at">.keep_all =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, distance, distance_km) <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  flight distance distance_km
+   &lt;int&gt;    &lt;dbl&gt;       &lt;dbl&gt;
+1   1632       17        27.4
+2   3833       80       129. 
+3   4193       80       129. 
+4   4502       80       129. 
+5   4645       80       129. </code></pre>
+</div>
+</div>
+</section>
+<section id="o-que-ocorre-se-voce-repetir-uma-variavel-multiplas-vezes-em-uma-instrucao-select" class="level3">
+<h3 class="anchored" data-anchor-id="o-que-ocorre-se-voce-repetir-uma-variavel-multiplas-vezes-em-uma-instrucao-select">7) O que ocorre se voce repetir uma variavel multiplas vezes em uma instrucao select?</h3>
+<p>A variavel eh selecionada apenas uma vez:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, flight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 1
+   flight
+    &lt;int&gt;
+ 1   1545
+ 2   1714
+ 3   1141
+ 4    725
+ 5    461
+ 6   1696
+ 7    507
+ 8   5708
+ 9     79
+10    301
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="o-que-faz-a-funcao-one_of-como-poderia-ser-util-na-utilizacao-com-esse-vetor-vars---cyear-month-day-dep_delay-arr_delay" class="level3">
+<h3 class="anchored" data-anchor-id="o-que-faz-a-funcao-one_of-como-poderia-ser-util-na-utilizacao-com-esse-vetor-vars---cyear-month-day-dep_delay-arr_delay">8) O que faz a funcao one_of()? Como poderia ser util na utilizacao com esse vetor? vars &lt;- c(“year”, “month”, “day”, “dep_delay”, “arr_delay”)</h3>
+<p>A funcao one_of() (atualmente depreciada em favor de all_of() ou any_of()) permite selecionar colunas de um dataframe pelo seus nomes, inclusive se estiverem contidas em um vetor. No exemplo acima:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"day"</span>, <span class="st">"dep_delay"</span>, <span class="st">"arr_delay"</span>) </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, <span class="fu">any_of</span>(vars)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  flight  year month   day dep_delay arr_delay
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1   1545  2013     1     1         2        11
+2   1714  2013     1     1         4        20
+3   1141  2013     1     1         2        33
+4    725  2013     1     1        -1       -18
+5    461  2013     1     1        -6       -25</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flight, <span class="fu">all_of</span>(vars)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  flight  year month   day dep_delay arr_delay
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1   1545  2013     1     1         2        11
+2   1714  2013     1     1         4        20
+3   1141  2013     1     1         2        33
+4    725  2013     1     1        -1       -18
+5    461  2013     1     1        -6       -25</code></pre>
+</div>
+</div>
+</section>
+<section id="como-o-resultado-da-execucao-do-codigo-abaixo-o-surpreendeu-como-podes-alterar-o-padrao-da-caixa-alta-e-baixa" class="level3">
+<h3 class="anchored" data-anchor-id="como-o-resultado-da-execucao-do-codigo-abaixo-o-surpreendeu-como-podes-alterar-o-padrao-da-caixa-alta-e-baixa">9) Como o resultado da execucao do codigo abaixo o surpreendeu? Como podes alterar o padrao da caixa alta e baixa?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(nycflights13<span class="sc">::</span>flights, <span class="fu">contains</span>(<span class="st">"TIME"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 6
+   dep_time sched_dep_time arr_time sched_arr_time air_time time_hour          
+      &lt;int&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt; &lt;dttm&gt;             
+ 1      517            515      830            819      227 2013-01-01 05:00:00
+ 2      533            529      850            830      227 2013-01-01 05:00:00
+ 3      542            540      923            850      160 2013-01-01 05:00:00
+ 4      544            545     1004           1022      183 2013-01-01 05:00:00
+ 5      554            600      812            837      116 2013-01-01 06:00:00
+ 6      554            558      740            728      150 2013-01-01 05:00:00
+ 7      555            600      913            854      158 2013-01-01 06:00:00
+ 8      557            600      709            723       53 2013-01-01 06:00:00
+ 9      557            600      838            846      140 2013-01-01 06:00:00
+10      558            600      753            745      138 2013-01-01 06:00:00
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+<p>Apesar do codigo estar selecionando TIME em caixa alta, ele retorna todas as variaveis que contem a string TIME, independentemente de estarem em caixa alta ou baixa. Para alterar os nomes das colunas de caixa baixa para caixa alta, podemos fazer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>nycflights13<span class="sc">::</span>flights <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(toupper) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 336,776
+Columns: 19
+$ YEAR           &lt;int&gt; 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2…
+$ MONTH          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ DAY            &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ DEP_TIME       &lt;int&gt; 517, 533, 542, 544, 554, 554, 555, 557, 557, 558, 558, …
+$ SCHED_DEP_TIME &lt;int&gt; 515, 529, 540, 545, 600, 558, 600, 600, 600, 600, 600, …
+$ DEP_DELAY      &lt;dbl&gt; 2, 4, 2, -1, -6, -4, -5, -3, -3, -2, -2, -2, -2, -2, -1…
+$ ARR_TIME       &lt;int&gt; 830, 850, 923, 1004, 812, 740, 913, 709, 838, 753, 849,…
+$ SCHED_ARR_TIME &lt;int&gt; 819, 830, 850, 1022, 837, 728, 854, 723, 846, 745, 851,…
+$ ARR_DELAY      &lt;dbl&gt; 11, 20, 33, -18, -25, 12, 19, -14, -8, 8, -2, -3, 7, -1…
+$ CARRIER        &lt;chr&gt; "UA", "UA", "AA", "B6", "DL", "UA", "B6", "EV", "B6", "…
+$ FLIGHT         &lt;int&gt; 1545, 1714, 1141, 725, 461, 1696, 507, 5708, 79, 301, 4…
+$ TAILNUM        &lt;chr&gt; "N14228", "N24211", "N619AA", "N804JB", "N668DN", "N394…
+$ ORIGIN         &lt;chr&gt; "EWR", "LGA", "JFK", "JFK", "LGA", "EWR", "EWR", "LGA",…
+$ DEST           &lt;chr&gt; "IAH", "IAH", "MIA", "BQN", "ATL", "ORD", "FLL", "IAD",…
+$ AIR_TIME       &lt;dbl&gt; 227, 227, 160, 183, 116, 150, 158, 53, 140, 138, 149, 1…
+$ DISTANCE       &lt;dbl&gt; 1400, 1416, 1089, 1576, 762, 719, 1065, 229, 944, 733, …
+$ HOUR           &lt;dbl&gt; 5, 5, 5, 5, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6…
+$ MINUTE         &lt;dbl&gt; 15, 29, 40, 45, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0…
+$ TIME_HOUR      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013-01-01 0…</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="aula-4" class="level1">
+<h1>AULA 4</h1>
+<section id="exercicio-1-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercicio-1-1">EXERCICIO 1</h2>
+<section id="como-as-variaveis-e-observacoes-sao-usadas-em-cada-uma-das-tabelas-de-amostra" class="level3">
+<h3 class="anchored" data-anchor-id="como-as-variaveis-e-observacoes-sao-usadas-em-cada-uma-das-tabelas-de-amostra">1) Como as variaveis e observacoes sao usadas em cada uma das tabelas de amostra?</h3>
+<p>Na tabela 1, cada variavel possui sua propria coluna e cada observacao tem sua propria linha.</p>
+<p>Na tabela 2, as variaveis populacao e casos sao consolidadas na coluna tipo, de forma que as observacoes por ano sao repetidas.</p>
+<p>Na tabela 3, as variaveis populacao e casos estao consolidadas na coluna rate, de forma que os casos estao no numerador da observacao e a populacao no denominador.</p>
+<p>Na tabela 4a, temos os anos como variaveis e os casos como observacao. Na tabela 4b, tambem temos os anos como variaveis, porem a populacao como observacoes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>table1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  country      year  cases population
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>table2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 4
+   country      year type            count
+   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>table3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country      year rate             
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>table4a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  country     `1999` `2000`
+  &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+1 Afghanistan    745   2666
+2 Brazil       37737  80488
+3 China       212258 213766</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>table4b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  country         `1999`     `2000`
+  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583</code></pre>
+</div>
+</div>
+</section>
+<section id="calcule-a-razao-para-table2-e-table4a-table4b." class="level3">
+<h3 class="anchored" data-anchor-id="calcule-a-razao-para-table2-e-table4a-table4b.">2) Calcule a razao para table2 e table4a + table4b.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> type, <span class="at">values_from =</span> count) <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rate =</span> cases <span class="sc">/</span> population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country      year  cases population      rate
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071 0.0000373
+2 Afghanistan  2000   2666   20595360 0.000129 
+3 Brazil       1999  37737  172006362 0.000219 
+4 Brazil       2000  80488  174504898 0.000461 
+5 China        1999 212258 1272915272 0.000167 
+6 China        2000 213766 1280428583 0.000167 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>table4a <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"1999"</span>, <span class="st">"2000"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">year =</span> name, <span class="at">cases =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    table4b <span class="sc">%&gt;%</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"1999"</span>, <span class="st">"2000"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> name, <span class="at">population =</span> value),</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"country"</span>)</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rate =</span> cases <span class="sc">/</span> population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country     year   cases population      rate
+  &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+1 Afghanistan 1999     745   19987071 0.0000373
+2 Afghanistan 2000    2666   20595360 0.000129 
+3 Brazil      1999   37737  172006362 0.000219 
+4 Brazil      2000   80488  174504898 0.000461 
+5 China       1999  212258 1272915272 0.000167 
+6 China       2000  213766 1280428583 0.000167 </code></pre>
+</div>
+</div>
+</section>
+<section id="extraia-o-numero-de-casos-de-tuberculose-cases-por-pais-por-ano." class="level3">
+<h3 class="anchored" data-anchor-id="extraia-o-numero-de-casos-de-tuberculose-cases-por-pais-por-ano.">3) Extraia o numero de casos de tuberculose (cases) por pais por ano.</h3>
+<p>Extraia a população correspondente por pais por ano. Divida os casos por populacao e multiplique por 10000. Guarde de volta no local apropriado. Com qual representacao eh mais facil trabalhar? Qual eh o mais dificil? Por que?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>table1 <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country, year) <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cases_per_10k =</span> (cases <span class="sc">/</span> population) <span class="sc">*</span> <span class="dv">10000</span> </span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country      year  cases population cases_per_10k
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071         0.373
+2 Afghanistan  2000   2666   20595360         1.29 
+3 Brazil       1999  37737  172006362         2.19 
+4 Brazil       2000  80488  174504898         4.61 
+5 China        1999 212258 1272915272         1.67 
+6 China        2000 213766 1280428583         1.67 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> type, <span class="at">values_from =</span> count) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(country, year) <span class="sc">%&gt;%</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">cases_per_10k =</span> (cases <span class="sc">/</span> population) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country      year  cases population cases_per_10k
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071         0.373
+2 Afghanistan  2000   2666   20595360         1.29 
+3 Brazil       1999  37737  172006362         2.19 
+4 Brazil       2000  80488  174504898         4.61 
+5 China        1999 212258 1272915272         1.67 
+6 China        2000 213766 1280428583         1.67 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>table3 <span class="sc">%&gt;%</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(rate, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>), <span class="at">sep =</span> <span class="st">"/"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cases =</span> <span class="fu">as.numeric</span>(cases),</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">population =</span> <span class="fu">as.numeric</span>(population)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country, year) <span class="sc">%&gt;%</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cases_per_10k =</span> (cases <span class="sc">/</span> population) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country      year  cases population cases_per_10k
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071         0.373
+2 Afghanistan  2000   2666   20595360         1.29 
+3 Brazil       1999  37737  172006362         2.19 
+4 Brazil       2000  80488  174504898         4.61 
+5 China        1999 212258 1272915272         1.67 
+6 China        2000 213766 1280428583         1.67 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>table4a <span class="sc">%&gt;%</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"1999"</span>, <span class="st">"2000"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">year =</span> name, <span class="at">cases =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    table4b <span class="sc">%&gt;%</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"1999"</span>, <span class="st">"2000"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> name, <span class="at">population =</span> value),</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"country"</span>)</span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country, year) <span class="sc">%&gt;%</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cases_per_10k =</span> (cases <span class="sc">/</span> population) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country     year   cases population cases_per_10k
+  &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+1 Afghanistan 1999     745   19987071         0.373
+2 Afghanistan 2000    2666   20595360         1.29 
+3 Brazil      1999   37737  172006362         2.19 
+4 Brazil      2000   80488  174504898         4.61 
+5 China       1999  212258 1272915272         1.67 
+6 China       2000  213766 1280428583         1.67 </code></pre>
+</div>
+</div>
+<p>A representacao mais facil de trabalhar eh a tabela 1 e a mais dificil a tabela 4. A 1 eh mais facil de ser trabalhada porque ja esta num formato tidy (uma observacao por linha e uma coluna para cada variavel), enquanto a tabela 4 precisa ser tratada e unificada numa tabela so, ja que as variaveis estao em tabelas diferentes e nao estao em colunas.</p>
+</section>
+<section id="recrie-o-grafico-mostrando-a-mudança-nos-casos-ao-longo-do-tempo" class="level3">
+<h3 class="anchored" data-anchor-id="recrie-o-grafico-mostrando-a-mudança-nos-casos-ao-longo-do-tempo">4) Recrie o grafico mostrando a mudança nos casos ao longo do tempo</h3>
+<p>usando table2 em vez de table1. O que você precisa fazer primeiro?</p>
+<p>A primeira coisa a ser feita eh separar a coluna type em duas colunas distintas, para que seja possivel plotar os casos de forma separada da populacao.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="sc">%&gt;%</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> type, <span class="at">values_from =</span> count) <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(., <span class="fu">aes</span>(year, cases)) <span class="sc">+</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> country), <span class="at">colour =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> country))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercicio-2-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercicio-2-1">EXERCICIO 2</h2>
+<section id="porque-pivot_longer-e-pivot_wider-nao-sao-perfeitamente" class="level3">
+<h3 class="anchored" data-anchor-id="porque-pivot_longer-e-pivot_wider-nao-sao-perfeitamente">1) Porque <em>pivot_longer()</em> e <em>pivot_wider()</em> nao sao perfeitamente</h3>
+<p>simetricas? Considere cudadosamente o seguinte exemplo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>stocks <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">c</span>(<span class="dv">2015</span>, <span class="dv">2015</span>, <span class="dv">2016</span>, <span class="dv">2016</span>), </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">half =</span> <span class="fu">c</span>( <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), </span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">return =</span> <span class="fu">c</span>(<span class="fl">1.88</span>, <span class="fl">0.59</span>, <span class="fl">0.92</span>, <span class="fl">0.17</span>) </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>stocks <span class="sc">%&gt;%</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> return) <span class="sc">%&gt;%</span></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="st">`</span><span class="at">2015</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2016</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"return"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As funcoes nao sao perfeitamente simetricas porque no dataframe original a coluna “year” eh do tipo numerico (double) - ao se executar o pivot_wider, em que os anos sao convertidos para nomes de colunas, os anos se tornam do tipo caractere (str), fazendo com que a operacao final se torne assimetrica em relacao ao dataframe original (onde o ano era uma variavel numerica). As operacoes tambem sao assimetricas na medida em que a ordem das colunas eh alterada.</p>
+</section>
+<section id="porque-este-codigo-falha" class="level3">
+<h3 class="anchored" data-anchor-id="porque-este-codigo-falha">2) Porque este codigo falha?</h3>
+<p>table4a %&gt;% pivot_longer(c(1999, 2000), names_to = “year”, values_to = “cases”)</p>
+<p>O codigo falha porque declara o nome das colunas a serem transformadas como valores numericos, o que faz com que o R interprete como se estivessemos declarando a posicao das colunas. Para que a operacao seja executada corretamente, os nomes das colunas devem ser declarados como str.</p>
+</section>
+<section id="o-que-aconteceria-ao-usar-a-funcao-pivot_wider-na-tabela-abaixo-como-poderia-consertar-incluindo-uma-coluna" class="level3">
+<h3 class="anchored" data-anchor-id="o-que-aconteceria-ao-usar-a-funcao-pivot_wider-na-tabela-abaixo-como-poderia-consertar-incluindo-uma-coluna">3) O que aconteceria ao usar a funcao <em>pivot_wider</em> na tabela abaixo? Como poderia consertar incluindo uma coluna?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>people <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>name,              <span class="sc">~</span>key,    <span class="sc">~</span>value,</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#-----------------|--------|------</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Phillip Woods"</span>,     <span class="st">"age"</span>,       <span class="dv">45</span>,</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Phillip Woods"</span>,     <span class="st">"height"</span>,   <span class="dv">186</span>,</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Phillip Woods"</span>,     <span class="st">"age"</span>,       <span class="dv">50</span>,</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Jessica Cordero"</span>,   <span class="st">"age"</span>,       <span class="dv">37</span>,</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Jessica Cordero"</span>,   <span class="st">"height"</span>,   <span class="dv">156</span></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>people <span class="sc">%&gt;%</span></span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> key, <span class="at">values_from =</span> value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Values from `value` are not uniquely identified; output will contain list-cols.
+• Use `values_fn = list` to suppress this warning.
+• Use `values_fn = {summary_fun}` to summarise duplicates.
+• Use the following dplyr code to identify duplicates.
+  {data} |&gt;
+  dplyr::summarise(n = dplyr::n(), .by = c(name, key)) |&gt;
+  dplyr::filter(n &gt; 1L)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  name            age       height   
+  &lt;chr&gt;           &lt;list&gt;    &lt;list&gt;   
+1 Phillip Woods   &lt;dbl [2]&gt; &lt;dbl [1]&gt;
+2 Jessica Cordero &lt;dbl [1]&gt; &lt;dbl [1]&gt;</code></pre>
+</div>
+</div>
+<p>Ocorreria um erro porque o mesmo valor para a mesma chave esta especificado mais de uma vez - isso poderia ser corrigido ao se adicionar uma coluna “id” para diferenciar pessoas com o mesmo nome:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>people <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>name,             <span class="sc">~</span>id, <span class="sc">~</span>key,    <span class="sc">~</span>value,</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#-----------------|----|--------|------</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Phillip Woods"</span>,     <span class="dv">1</span>, <span class="st">"age"</span>,       <span class="dv">45</span>,</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Phillip Woods"</span>,     <span class="dv">1</span>, <span class="st">"height"</span>,   <span class="dv">186</span>,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Phillip Woods"</span>,     <span class="dv">2</span>,<span class="st">"age"</span>,       <span class="dv">50</span>,</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Jessica Cordero"</span>,   <span class="dv">3</span>,<span class="st">"age"</span>,       <span class="dv">37</span>,</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Jessica Cordero"</span>,   <span class="dv">3</span>,<span class="st">"height"</span>,   <span class="dv">156</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>people <span class="sc">%&gt;%</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> key, <span class="at">values_from =</span> value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  name               id   age height
+  &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 Phillip Woods       1    45    186
+2 Phillip Woods       2    50     NA
+3 Jessica Cordero     3    37    156</code></pre>
+</div>
+</div>
+</section>
+<section id="organize-o-tibble-abaixo.-voce-precisara-utilizar-pivot_longer-ou-pivot_wider-quais-sao-as-variaveis" class="level3">
+<h3 class="anchored" data-anchor-id="organize-o-tibble-abaixo.-voce-precisara-utilizar-pivot_longer-ou-pivot_wider-quais-sao-as-variaveis">4) Organize o tibble abaixo. Voce precisara utilizar <em>pivot_longer()</em> ou <em>pivot_wider()</em>? Quais sao as variaveis?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>preg <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>pregnant, <span class="sc">~</span>male, <span class="sc">~</span>female,</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"yes"</span>,     <span class="cn">NA</span>,    <span class="dv">10</span>,</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"no"</span>,      <span class="dv">20</span>,    <span class="dv">12</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Sera necessario usar a funcao pivot_longer, de modo que tenhamos as variaveis pregnant, gender e cases</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>preg <span class="sc">%&gt;%</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>), <span class="at">names_to =</span> <span class="st">"gender"</span>, <span class="at">values_to =</span> <span class="st">"cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  pregnant gender cases
+  &lt;chr&gt;    &lt;chr&gt;  &lt;dbl&gt;
+1 yes      male      NA
+2 yes      female    10
+3 no       male      20
+4 no       female    12</code></pre>
+</div>
+</div>
+</section>
+<section id="o-que-os-argumentos-extra-e-fill-fazem-em-separate-experimente-as-varias-opcoes-com-os-seguintes-conjunto-de-dados." class="level3">
+<h3 class="anchored" data-anchor-id="o-que-os-argumentos-extra-e-fill-fazem-em-separate-experimente-as-varias-opcoes-com-os-seguintes-conjunto-de-dados.">5) O que os argumentos “extra” e “fill” fazem em <em>separate( )</em>? Experimente as varias opcoes com os seguintes conjunto de dados.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a,b,c"</span>, <span class="st">"d,e,f,g"</span>, <span class="st">"h,i,j"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(x, <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 3 pieces. Additional pieces discarded in 1 rows [2].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  one   two   three
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 a     b     c    
+2 d     e     f    
+3 h     i     j    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a,b,c"</span>, <span class="st">"d,e"</span>, <span class="st">"f,g,i"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">separate</span>(x, <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 3 pieces. Missing pieces filled with `NA` in 1 rows [2].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  one   two   three
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 a     b     c    
+2 d     e     &lt;NA&gt; 
+3 f     g     i    </code></pre>
+</div>
+</div>
+<p>O argumento “extra” eh utilizado para lidar com strings que contem um caractere a mais em relacao aos demais, sendo possivel ignorar o caractere extra ou fundi-lo a um dos caracteres remanescentes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a,b,c"</span>, <span class="st">"d,e,f,g"</span>, <span class="st">"h,i,j"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(x, <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>), <span class="at">extra =</span> <span class="st">"merge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  one   two   three
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 a     b     c    
+2 d     e     f,g  
+3 h     i     j    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a,b,c"</span>, <span class="st">"d,e,f,g"</span>, <span class="st">"h,i,j"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(x, <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>), <span class="at">extra =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  one   two   three
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 a     b     c    
+2 d     e     f    
+3 h     i     j    </code></pre>
+</div>
+</div>
+<p>O argumento “fill” eh utilizado para lidar com strings que possuem um caractere a menos em relacao as demais, sendo possivel ignorar o caractere faltante ou substitui-lo por um caratcere a esquerda ou a direita:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a,b,c"</span>, <span class="st">"d,e"</span>, <span class="st">"f,g,i"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">separate</span>(x, <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>), <span class="at">fill =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  one   two   three
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 a     b     c    
+2 d     e     &lt;NA&gt; 
+3 f     g     i    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a,b,c"</span>, <span class="st">"d,e"</span>, <span class="st">"f,g,i"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">separate</span>(x, <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>), <span class="at">fill =</span> <span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  one   two   three
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 a     b     c    
+2 &lt;NA&gt;  d     e    
+3 f     g     i    </code></pre>
+</div>
+</div>
+</section>
+<section id="ambos-unite-e-separate-tem-um-argumento-remove.-o-que-ele-faz-porque-deve-atribuir-false-a-ele" class="level3">
+<h3 class="anchored" data-anchor-id="ambos-unite-e-separate-tem-um-argumento-remove.-o-que-ele-faz-porque-deve-atribuir-false-a-ele">6) Ambos <em>unite( )</em> e <em>separate( )</em> tem um argumento “remove”. O que ele faz? Porque deve atribuir FALSE a ele?</h3>
+<p>O argumento “remove” retira a coluna original que contem a string que esta sendo separada do dataframe. Deve-se atribuir FALSE a ele para que os dados originais sejam preservados no dataframe.</p>
+</section>
+<section id="compare-e-contraste-separate-e-extract-.-porque-ha-tres-variacoes-de-separacao-por-posicao-pelo-separador-e-com-grupos-mas-apenas-um-unite" class="level3">
+<h3 class="anchored" data-anchor-id="compare-e-contraste-separate-e-extract-.-porque-ha-tres-variacoes-de-separacao-por-posicao-pelo-separador-e-com-grupos-mas-apenas-um-unite">7) Compare e contraste <em>separate( )</em> e <em>extract( )</em>. Porque ha tres variacoes de separacao (por posicao, pelo separador, e com grupos), mas apenas um <em>unite( )</em>?</h3>
+<p>A funcao extract separa uma coluna de caracteres em diversas colunas atraves de expressos regulares (REGEX), enquanto a funcao separate separa a coluna de caracteres atraves de um separador qualquer. Ha apenas um unite porque a funcao de unir uma serie de colunas de caracteres em uma so nao possui variacoes do tipo o separador que separa um caractere de outro ou um padrao especifico de caracteres que necessita ser extraido em diferentes colunas - eh necessario apenas especificar qual separador ira separar as strings unidas.</p>
+</section>
+<section id="compare-e-contraste-os-argumento-de-fill-aos-de-pivot_wider-e-complete-." class="level3">
+<h3 class="anchored" data-anchor-id="compare-e-contraste-os-argumento-de-fill-aos-de-pivot_wider-e-complete-.">8) Compare e contraste os argumento de <em>fill( )</em> aos de <em>pivot_wider( )</em> e <em>complete( )</em>.</h3>
+<p>A funcao fill eh utilizada para preencher valores faltantes em um dataframe, com os argumentos data (o df), as colunas a serem preenchidas e a direcao em que serao preenchidas.</p>
+<p>A funcao pivot_wider eh utilizada para aumentar o numero de colunas e reduzir o numero de linhas, com diversos argumentos, sendo os principais names_from (as novas colunas geradas), values_from (de onde sairao os valores das colunas geradas). Destaca-se nessa comparacao o argumento values_fill (o valor que deve substituir os valores faltantes)</p>
+<p>A funcao complete eh utilizada para revelar valores faltantes implicitos, isto eh, a funcao gera todas as combinacoes possiveis entre duas ou mais variaveis e revela valores faltantes. Neste comparativo, destaca-se o argumento fill, utilizado para preencher valores faltantes por algum valor designado.</p>
+</section>
+<section id="o-que-faz-o-argumento-direction-em-fill" class="level3">
+<h3 class="anchored" data-anchor-id="o-que-faz-o-argumento-direction-em-fill">9) O que faz o argumento direction em <em>fill( )</em>?</h3>
+<p>O argumento direction define em que direcao os valores faltantes serao preenchidos - se for definido como down, o ultimo valor preenchido sera “arrastado” ate o proximo valor preenchido, se definido como “up” o valor preenchido sera “arrastado” ate preencher todos os valores faltantes acima dele, se definido como “downup” os valores faltantes seram preenchidos primeiro para baixo e depois para cima.</p>
+</section>
+</section>
+</section>
+<section id="aula-6" class="level1">
+<h1>AULA 6</h1>
+<section id="exercicios" class="level2">
+<h2 class="anchored" data-anchor-id="exercicios">EXERCICIOS</h2>
+<section id="encontre-no-yahoo-os-tickers-de-petrobras-a-mais-liquida-vale-friboi-bradesco-e-o-indice-bovespa-e-armazene-os-num-vetor-denominado-ativos." class="level3">
+<h3 class="anchored" data-anchor-id="encontre-no-yahoo-os-tickers-de-petrobras-a-mais-liquida-vale-friboi-bradesco-e-o-indice-bovespa-e-armazene-os-num-vetor-denominado-ativos.">1) Encontre no Yahoo os tickers de Petrobras (a mais liquida), Vale, Friboi, Bradesco, e o indice Bovespa e armazene-os num vetor denominado “ativos”.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>ativos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PETR4.SA"</span>, <span class="st">"VALE3.SA"</span>, <span class="st">"JBSS3.SA"</span>, <span class="st">"BBDC3.SA"</span>, <span class="st">"^BVSP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="obtenha-os-precos-dos-ativos-do-exercicio-1-para-o-ultimo-ano." class="level3">
+<h3 class="anchored" data-anchor-id="obtenha-os-precos-dos-ativos-do-exercicio-1-para-o-ultimo-ano.">2) Obtenha os precos dos ativos do exercicio 1 para o ultimo ano.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(timetk)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: xts</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: zoo</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'zoo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+######################### Warning from 'xts' package ##########################
+#                                                                             #
+# The dplyr lag() function breaks how base R's lag() function is supposed to  #
+# work, which breaks lag(my_xts). Calls to lag(my_xts) that you type or       #
+# source() into this session won't work correctly.                            #
+#                                                                             #
+# Use stats::lag() to make sure you're not using dplyr::lag(), or you can add #
+# conflictRules('dplyr', exclude = 'lag') to your .Rprofile to stop           #
+# dplyr from breaking base R's lag() function.                                #
+#                                                                             #
+# Code in packages is not affected. It's protected by R's namespace mechanism #
+# Set `options(xts.warn_dplyr_breaks_lag = FALSE)` to suppress this warning.  #
+#                                                                             #
+###############################################################################</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'xts'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    first, last</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: TTR</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibbletime)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'tibbletime'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> <span class="fu">getSymbols</span>(</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>  ativos,</span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">src =</span> <span class="st">"yahoo"</span>,</span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="st">"2012-12-31"</span>,</span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="st">"2017-12-31"</span>,</span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">auto.assign =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">warnings =</span> <span class="cn">FALSE</span></span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="sc">~</span><span class="fu">Ad</span>(<span class="fu">get</span>(.))) <span class="sc">%&gt;%</span></span>
+<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a><span class="fu">reduce</span>(merge) <span class="sc">%&gt;%</span></span>
+<span id="cb103-11"><a href="#cb103-11" aria-hidden="true" tabindex="-1"></a><span class="st">"colnames&lt;-"</span>(ativos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="suponha-que-uma-ação-caia-50-e-depois-sobe-50-de-quanto-foi-a-variação-total-no-período-dicacomponha-o-retorno-destes-dois-períodos-utilizando-juros-compostos." class="level3">
+<h3 class="anchored" data-anchor-id="suponha-que-uma-ação-caia-50-e-depois-sobe-50-de-quanto-foi-a-variação-total-no-período-dicacomponha-o-retorno-destes-dois-períodos-utilizando-juros-compostos.">3) Suponha que uma ação caia 50% e depois sobe 50%, de quanto foi a variação total no período? dica(Componha o retorno destes dois períodos utilizando juros compostos.)</h3>
+<p>Supondo que a ação valha R$ 100: após uma queda de 50%, a ação passa a valer R$ 50. Após uma valorização de 50%, passa a valer R$ 75. Fazendo (75 - 100) / 100 = -25%</p>
+</section>
+<section id="suponha-que-uma-acao-caia-50-e-depois-sobe-50-de-quanto-foi-a-variacao-total-no-periodo-dica-utilize-os-log-retornos" class="level3">
+<h3 class="anchored" data-anchor-id="suponha-que-uma-acao-caia-50-e-depois-sobe-50-de-quanto-foi-a-variacao-total-no-periodo-dica-utilize-os-log-retornos">4) Suponha que uma acao caia 50% e depois sobe 50%, de quanto foi a variacao total no periodo? dica (utilize os log retornos)</h3>
+<p>Utilizando a formula dos log retornos, partindo do exemplo acima, temos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">75</span><span class="sc">/</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.2876821</code></pre>
+</div>
+</div>
+<p>Convertendo para retorno linear:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">log</span>(<span class="dv">75</span><span class="sc">/</span><span class="dv">100</span>)) <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.25</code></pre>
+</div>
+</div>
+</section>
+<section id="utilize-o-ggplot2-e-o-codigo-abaixo-para-obter-a-forma-longa-do-objeto-tidyverse-desenvolvido-no-texto.-obtenha-um-histograma-conjunto-com-uma-cor-por-ativo-utilizando-os-argumentos-alpha0.45-e-binwidth-.005.-coloque-o-titulo-de-monthly-returns-since-2013" class="level3">
+<h3 class="anchored" data-anchor-id="utilize-o-ggplot2-e-o-codigo-abaixo-para-obter-a-forma-longa-do-objeto-tidyverse-desenvolvido-no-texto.-obtenha-um-histograma-conjunto-com-uma-cor-por-ativo-utilizando-os-argumentos-alpha0.45-e-binwidth-.005.-coloque-o-titulo-de-monthly-returns-since-2013">5) Utilize o ggplot2 e o codigo abaixo para obter a forma longa do objeto tidyverse desenvolvido no texto. Obtenha um histograma conjunto com uma cor por ativo utilizando os argumentos alpha=0.45 e binwidth = .005. Coloque o titulo de “Monthly Returns Since 2013”</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>prices <span class="sc">%&gt;%</span> </span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span>  </span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> (<span class="fu">log</span>(returns) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(returns)))) <span class="sc">%&gt;%</span></span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> asset, <span class="at">values_from =</span> returns) <span class="sc">%&gt;%</span> </span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, <span class="fu">all_of</span>(ativos)) <span class="sc">%&gt;%</span> </span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(ativos), <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(returns, <span class="at">fill =</span> asset)) <span class="sc">+</span></span>
+<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> .<span class="dv">45</span>, <span class="at">binwidth =</span> .<span class="dv">005</span>) <span class="sc">+</span></span>
+<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Monthly Returns Since 2013"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in to.period(x, "months", indexAt = indexAt, name = name, ...): missing
+values removed from data</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="obtenha-o-grafico-acima-utilizando-o-conceito-de-ggplot2facet_wrap." class="level3">
+<h3 class="anchored" data-anchor-id="obtenha-o-grafico-acima-utilizando-o-conceito-de-ggplot2facet_wrap.">6) Obtenha o grafico acima utilizando o conceito de ggplot2:facet_wrap().</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>prices <span class="sc">%&gt;%</span> </span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span>  </span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> (<span class="fu">log</span>(returns) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(returns)))) <span class="sc">%&gt;%</span></span>
+<span id="cb110-8"><a href="#cb110-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> asset, <span class="at">values_from =</span> returns) <span class="sc">%&gt;%</span> </span>
+<span id="cb110-9"><a href="#cb110-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, <span class="fu">all_of</span>(ativos)) <span class="sc">%&gt;%</span> </span>
+<span id="cb110-10"><a href="#cb110-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb110-11"><a href="#cb110-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(ativos), <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb110-12"><a href="#cb110-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(returns, <span class="at">fill =</span> asset)) <span class="sc">+</span></span>
+<span id="cb110-13"><a href="#cb110-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> .<span class="dv">45</span>, <span class="at">binwidth =</span> .<span class="dv">005</span>) <span class="sc">+</span></span>
+<span id="cb110-14"><a href="#cb110-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(. <span class="sc">~</span> asset) <span class="sc">+</span></span>
+<span id="cb110-15"><a href="#cb110-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Monthly Returns Since 2013"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in to.period(x, "months", indexAt = indexAt, name = name, ...): missing
+values removed from data</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="refaca-os-dois-exercicios-para-a-carteira-com-ativos-brasileiros-ja-foi-feito-analise-da-carteira-escolhida-no-final-do-caderno" class="level3">
+<h3 class="anchored" data-anchor-id="refaca-os-dois-exercicios-para-a-carteira-com-ativos-brasileiros-ja-foi-feito-analise-da-carteira-escolhida-no-final-do-caderno">7) Refaca os dois exercicios para a carteira com ativos brasileiros (ja foi feito, analise da carteira escolhida no final do caderno)</h3>
+</section>
+<section id="obtenha-o-grafico-das-densidades-das-distribuicoes-dos-ativos-do-objeto-tidyverse-desenvolvido-coloque-o-titulo-monthly-returns-density-since-2013e-para-o-eixo-x-monthly-returns-e-y-distribution." class="level3">
+<h3 class="anchored" data-anchor-id="obtenha-o-grafico-das-densidades-das-distribuicoes-dos-ativos-do-objeto-tidyverse-desenvolvido-coloque-o-titulo-monthly-returns-density-since-2013e-para-o-eixo-x-monthly-returns-e-y-distribution.">8) Obtenha o grafico das densidades das distribuicoes dos ativos do objeto tidyverse desenvolvido coloque o titulo: “Monthly Returns Density Since 2013”e para o eixo x: “monthly returns” e y: “distribution”.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>prices <span class="sc">%&gt;%</span> </span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span>  </span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> (<span class="fu">log</span>(returns) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(returns)))) <span class="sc">%&gt;%</span></span>
+<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> asset, <span class="at">values_from =</span> returns) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, <span class="fu">all_of</span>(ativos)) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb112-11"><a href="#cb112-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(ativos), <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-12"><a href="#cb112-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(returns, <span class="at">fill =</span> asset)) <span class="sc">+</span></span>
+<span id="cb112-13"><a href="#cb112-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">45</span>) <span class="sc">+</span></span>
+<span id="cb112-14"><a href="#cb112-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb112-15"><a href="#cb112-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Monthly Returns Density Since 2013"</span>,</span>
+<span id="cb112-16"><a href="#cb112-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"monthly returns"</span>,</span>
+<span id="cb112-17"><a href="#cb112-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"distribution"</span></span>
+<span id="cb112-18"><a href="#cb112-18" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in to.period(x, "months", indexAt = indexAt, name = name, ...): missing
+values removed from data</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="combine-para-os-ativos-do-portfolio-utilizando-o-ggplot2facetwrap-os-histogramas-e-densidades.-utilize-titulo-monthly-returns-density-since-2013e-para-o-eixo-x-monthly-returns-e-y-distribution." class="level3">
+<h3 class="anchored" data-anchor-id="combine-para-os-ativos-do-portfolio-utilizando-o-ggplot2facetwrap-os-histogramas-e-densidades.-utilize-titulo-monthly-returns-density-since-2013e-para-o-eixo-x-monthly-returns-e-y-distribution.">9) Combine para os ativos do portfolio utilizando o ggplot2::facetwrap os histogramas e densidades. Utilize titulo: “Monthly Returns Density Since 2013”e para o eixo x: “monthly returns” e y: “distribution”.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>prices <span class="sc">%&gt;%</span> </span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span>  </span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">returns =</span> (<span class="fu">log</span>(returns) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(returns)))) <span class="sc">%&gt;%</span></span>
+<span id="cb114-8"><a href="#cb114-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> asset, <span class="at">values_from =</span> returns) <span class="sc">%&gt;%</span> </span>
+<span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, <span class="fu">all_of</span>(ativos)) <span class="sc">%&gt;%</span> </span>
+<span id="cb114-10"><a href="#cb114-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb114-11"><a href="#cb114-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(ativos), <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-12"><a href="#cb114-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(returns, <span class="at">fill =</span> asset)) <span class="sc">+</span></span>
+<span id="cb114-13"><a href="#cb114-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">45</span>) <span class="sc">+</span></span>
+<span id="cb114-14"><a href="#cb114-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> .<span class="dv">45</span>, <span class="at">binwidth =</span> .<span class="dv">005</span>) <span class="sc">+</span></span>
+<span id="cb114-15"><a href="#cb114-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(. <span class="sc">~</span> asset) <span class="sc">+</span></span>
+<span id="cb114-16"><a href="#cb114-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb114-17"><a href="#cb114-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Monthly Returns Density Since 2013"</span>,</span>
+<span id="cb114-18"><a href="#cb114-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"monthly returns"</span>,</span>
+<span id="cb114-19"><a href="#cb114-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"distribution"</span></span>
+<span id="cb114-20"><a href="#cb114-20" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in to.period(x, "months", indexAt = indexAt, name = name, ...): missing
+values removed from data</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_de_r_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="analise-da-carteira-escolhida" class="level3">
+<h3 class="anchored" data-anchor-id="analise-da-carteira-escolhida">10) Analise da carteira escolhida</h3>
+<p>Comecamos escolhendo os tickers dos ativos no yahoofinance:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>ativos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ITUB4.SA"</span>, <span class="st">"WEGE3.SA"</span>, <span class="st">"PRIO3.SA"</span>, <span class="st">"EMBR3.SA"</span>, <span class="st">"^BVSP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As empresas sao, respectivamente: Itau, Weg, PetroRio e Embraer, com o indice ibovespa como comparativo. Em seguida, obtemos os retornos dos ultimos 5 anos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> <span class="fu">getSymbols</span>(</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>  ativos,</span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">src =</span> <span class="st">"yahoo"</span>,</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> (<span class="fu">today</span>() <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%m-%</span> <span class="fu">years</span>(<span class="dv">5</span>),</span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="fu">today</span>() <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">auto.assign =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb117-9"><a href="#cb117-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">warnings =</span> <span class="cn">FALSE</span></span>
+<span id="cb117-10"><a href="#cb117-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb117-11"><a href="#cb117-11" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="sc">~</span><span class="fu">Ad</span>(<span class="fu">get</span>(.))) <span class="sc">%&gt;%</span></span>
+<span id="cb117-12"><a href="#cb117-12" aria-hidden="true" tabindex="-1"></a><span class="fu">reduce</span>(merge) <span class="sc">%&gt;%</span></span>
+<span id="cb117-13"><a href="#cb117-13" aria-hidden="true" tabindex="-1"></a><span class="st">"colnames&lt;-"</span>(ativos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Com os precos em maos, calculamos os retornos mensais:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>prices_monthly <span class="ot">&lt;-</span> prices <span class="sc">%&gt;%</span> </span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">to.monthly</span>(<span class="at">indexAt =</span> <span class="st">"lastof"</span>, <span class="at">OHLC =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">tk_tbl</span>(<span class="at">preserve_index =</span> <span class="cn">TRUE</span>, <span class="at">rename_index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">tbl_time</span>(<span class="at">index =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"asset"</span>, <span class="at">values_to =</span> <span class="st">"returns"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">group_by</span>(asset) <span class="sc">%&gt;%</span>  </span>
+<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">mutate</span>(<span class="at">returns =</span> (<span class="fu">log</span>(returns) <span class="sc">-</span> <span class="fu">log</span>(<span class="fu">lag</span>(returns))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nota-se que ha alguns valores nulos. P/ evitar problemas de visualizacao, omitimos os valores nulos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>prices_monthly <span class="ot">&lt;-</span> prices_monthly <span class="sc">%&gt;%</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">na.omit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alem dos log retornos, eh interessante calcular os retornos lineares:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>prices_monthly <span class="ot">&lt;-</span> prices_monthly <span class="sc">%&gt;%</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">mutate</span>(<span class="at">linear_returns =</span> <span class="fu">exp</span>(returns) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Apos o tratamento, 5 meses foram perdidos, o que no total nao prejudica a totalidade da analise. Agora iremos visualizar os log retornos uttilizando o pacote highcharter:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(highcharter)</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>chart <span class="ot">&lt;-</span> <span class="fu">highchart</span>(<span class="at">type =</span> <span class="st">"stock"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>          <span class="fu">hc_title</span>(<span class="at">text =</span> <span class="st">"Monthly Log Returns in the last 5 years"</span>)</span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ao inves de adicionar cada ativo manualmente, usamos um loop</span></span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (a <span class="cf">in</span> ativos) {</span>
+<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a>  series_data <span class="ot">&lt;-</span> prices_monthly <span class="sc">%&gt;%</span></span>
+<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">filter</span>(asset <span class="sc">==</span> <span class="sc">!!</span>a)</span>
+<span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a>  chart <span class="ot">&lt;-</span> chart <span class="sc">%&gt;%</span></span>
+<span id="cb121-13"><a href="#cb121-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">hc_add_series</span>(</span>
+<span id="cb121-14"><a href="#cb121-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> <span class="fu">list_parse2</span>(series_data),</span>
+<span id="cb121-15"><a href="#cb121-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">name =</span> a,</span>
+<span id="cb121-16"><a href="#cb121-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">type =</span> <span class="st">"line"</span></span>
+<span id="cb121-17"><a href="#cb121-17" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb121-18"><a href="#cb121-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb121-19"><a href="#cb121-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-20"><a href="#cb121-20" aria-hidden="true" tabindex="-1"></a>chart <span class="sc">%&gt;%</span></span>
+<span id="cb121-21"><a href="#cb121-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_add_theme</span>(<span class="fu">hc_theme_flat</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-22"><a href="#cb121-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_navigator</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-23"><a href="#cb121-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_scrollbar</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-24"><a href="#cb121-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_exporting</span>(<span class="at">enabled=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-25"><a href="#cb121-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_legend</span>(<span class="at">enabled=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="highchart html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d3e119e859d2a1775cc5" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d3e119e859d2a1775cc5">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"Monthly Log Returns in the last 5 years"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[["2019-06-30","ITUB4.SA",0.0357956551828882,0.036444032883808],["2019-07-31","ITUB4.SA",-0.040109712636033,-0.0393159658074852],["2019-08-31","ITUB4.SA",-0.00939687037863735,-0.00935285776035744],["2019-09-30","ITUB4.SA",0.0320525865341001,0.0325718032497779],["2019-10-31","ITUB4.SA",0.0341105686912822,0.0346990057184613],["2019-11-30","ITUB4.SA",-0.0398561128230059,-0.0390723056212529],["2019-12-31","ITUB4.SA",0.0654869241235247,0.0676787763864273],["2020-01-31","ITUB4.SA",-0.122174212476345,-0.115005821955242],["2020-02-29","ITUB4.SA",-0.0105314528623968,-0.0104761912777593],["2020-03-31","ITUB4.SA",-0.325867521066648,-0.278099182252604],["2020-04-30","ITUB4.SA",-0.0133055913778017,-0.0132174632952701],["2020-05-31","ITUB4.SA",0.0124468898561094,0.0125246747814309],["2020-06-30","ITUB4.SA",0.100135006500898,0.105320133406485],["2020-07-31","ITUB4.SA",0.055628025057334,0.0572043570572094],["2020-08-31","ITUB4.SA",-0.12987645763621,-0.121796080392933],["2020-09-30","ITUB4.SA",-0.0449737107549768,-0.0439773853844991],["2020-10-31","ITUB4.SA",0.0433006628704278,0.0442518154043894],["2020-11-30","ITUB4.SA",0.196497281238346,0.217132011781854],["2020-12-31","ITUB4.SA",0.104653454252869,0.110325765004504],["2021-01-31","ITUB4.SA",-0.107642255997145,-0.102051225233759],["2021-02-28","ITUB4.SA",-0.0974401687570992,-0.09284338376002],["2021-03-31","ITUB4.SA",0.0929154960522425,0.0973689993372704],["2021-04-30","ITUB4.SA",-0.0132325226265158,-0.0131453576932211],["2021-05-31","ITUB4.SA",0.0726759275880822,0.0753819788071157],["2021-06-30","ITUB4.SA",0.00927080333057351,0.00931391033698459],["2021-07-31","ITUB4.SA",0.0171429147436437,0.0172906977761296],["2021-08-31","ITUB4.SA",0.0247768184451891,0.0250863146352358],["2021-09-30","ITUB4.SA",-0.0666859377139577,-0.0645110429940219],["2021-10-31","ITUB4.SA",-0.215478036997783,-0.193844024330835],["2021-11-30","ITUB4.SA",-0.0280121953964474,-0.0276234917880769],["2021-12-31","ITUB4.SA",-0.0652399544085163,-0.0631573631163782],["2022-01-31","ITUB4.SA",0.190693511313678,0.210088516800622],["2022-02-28","ITUB4.SA",0.00674383851400995,0.00676662939683426],["2022-03-31","ITUB4.SA",0.0766503467767627,0.079664502213219],["2022-04-30","ITUB4.SA",-0.140193391668821,-0.130809874985044],["2022-05-31","ITUB4.SA",0.0923488941981994,0.0967474041428009],["2022-06-30","ITUB4.SA",-0.142514068981076,-0.132824646067212],["2022-07-31","ITUB4.SA",0.0418299808550322,0.0427171817955598],["2022-08-31","ITUB4.SA",0.100718828885098,0.105965632452135],["2022-09-30","ITUB4.SA",0.084267075911995,0.0879194120810416],["2022-10-31","ITUB4.SA",0.0807268464710185,0.0840747372799568],["2022-11-30","ITUB4.SA",-0.155765306755175,-0.144239992102117],["2022-12-31","ITUB4.SA",-0.0189423997770124,-0.0187641199794353],["2023-01-31","ITUB4.SA",0.0138196999987064,0.0139156334672454],["2023-02-28","ITUB4.SA",0.0046372536653938,0.00464802236546924],["2023-03-31","ITUB4.SA",-0.0154318857434208,-0.0153134243384027],["2023-04-30","ITUB4.SA",0.0473071638839433,0.0484440037568472],["2023-05-31","ITUB4.SA",0.016375172961431,0.0165099809356077],["2023-06-30","ITUB4.SA",0.0862672679874463,0.0900976375762883],["2023-07-31","ITUB4.SA",0.00833233836701819,0.00836714891560142],["2023-08-31","ITUB4.SA",-0.0425506550092347,-0.0416580805273739],["2023-09-30","ITUB4.SA",0.00242832488649825,0.00243127565536727],["2023-10-31","ITUB4.SA",-0.013787768672934,-0.0136931527371615],["2023-11-30","ITUB4.SA",0.164351053516056,0.178628003979924],["2023-12-31","ITUB4.SA",0.0810711342686994,0.0844480352410555],["2024-01-31","ITUB4.SA",-0.0351397454879208,-0.0345295133143484],["2024-02-29","ITUB4.SA",0.0675393326044116,0.0698723396358436],["2024-03-31","ITUB4.SA",0.0279808090558133,0.0283759487266175],["2024-04-30","ITUB4.SA",-0.0989662149576667,-0.0942266909037914],["2024-05-31","ITUB4.SA",0.000244060889626585,0.000244090674908604]],"name":"ITUB4.SA","type":"line"},{"data":[["2019-06-30","WEGE3.SA",0.114452746796613,0.121259656701525],["2019-07-31","WEGE3.SA",0.114836573149585,0.121690108310342],["2019-08-31","WEGE3.SA",-0.0570099240330477,-0.055415304769723],["2019-09-30","WEGE3.SA",0.0757528746301213,0.07869596807598],["2019-10-31","WEGE3.SA",0.0510870271080131,0.052414477886416],["2019-11-30","WEGE3.SA",0.176421840172428,0.192941183038518],["2019-12-31","WEGE3.SA",0.131615046538438,0.140669130208814],["2020-01-31","WEGE3.SA",0.128433075275894,0.137045322300301],["2020-02-29","WEGE3.SA",0.0940373145639963,0.0986007389599306],["2020-03-31","WEGE3.SA",-0.25011501509054,-0.221288785620199],["2020-04-30","WEGE3.SA",0.173745430885941,0.189752652987052],["2020-05-31","WEGE3.SA",0.0462354486526335,0.0473209722413261],["2020-06-30","WEGE3.SA",0.191300546599684,0.210823306228502],["2020-07-31","WEGE3.SA",0.287656233837488,0.333298882292695],["2020-08-31","WEGE3.SA",-0.0413787751492496,-0.0405343606292066],["2020-09-30","WEGE3.SA",0.0171111553815364,0.0172583897855336],["2020-10-31","WEGE3.SA",0.143395173600943,0.154185815322595],["2020-11-30","WEGE3.SA",-0.0302565143944591,-0.0298033677751346],["2020-12-31","WEGE3.SA",0.029575295346731,0.0300169880384344],["2021-01-31","WEGE3.SA",0.101007348844117,0.106284771647887],["2021-02-28","WEGE3.SA",-0.0709639310699091,-0.0685045104326302],["2021-03-31","WEGE3.SA",-0.0407942392174578,-0.0399733545395399],["2021-04-30","WEGE3.SA",-0.0628235624337745,-0.0608908467939302],["2021-05-31","WEGE3.SA",-0.0248708891859071,-0.0245641567855684],["2021-06-30","WEGE3.SA",-0.0129497829041632,-0.0128662952364912],["2021-07-31","WEGE3.SA",0.0582298387804259,0.0599585873048258],["2021-08-31","WEGE3.SA",0.000230061781019586,0.000230088247260785],["2021-09-30","WEGE3.SA",0.108865814779953,0.115012722075255],["2021-10-31","WEGE3.SA",-0.0686685758570897,-0.0663639416619174],["2021-11-30","WEGE3.SA",-0.138020191098164,-0.128918896515833],["2021-12-31","WEGE3.SA",0.0239222924280047,0.0242107258694915],["2022-01-31","WEGE3.SA",-0.0251779077965919,-0.0248635877751691],["2022-02-28","WEGE3.SA",-0.082821182227176,-0.0794842629221562],["2022-03-31","WEGE3.SA",0.171750996576296,0.187382134183742],["2022-04-30","WEGE3.SA",-0.147101748473383,-0.136793856959381],["2022-05-31","WEGE3.SA",-0.170957882723174,-0.157142928431319],["2022-06-30","WEGE3.SA",0.0433263876881362,0.0442786789375105],["2022-07-31","WEGE3.SA",0.0634954088245507,0.0655545936421462],["2022-08-31","WEGE3.SA",0.00887621302238939,0.00891572341556679],["2022-09-30","WEGE3.SA",0.129037162291995,0.137732404123931],["2022-10-31","WEGE3.SA",0.225753806688504,0.253267081321153],["2022-11-30","WEGE3.SA",-0.032293498786514,-0.0317776317171311],["2022-12-31","WEGE3.SA",-0.0111913060214515,-0.0111289163138826],["2023-01-31","WEGE3.SA",-0.00703572276387687,-0.00701103001086423],["2023-02-28","WEGE3.SA",0.0295018399116769,0.0299413304712288],["2023-03-31","WEGE3.SA",0.0362160189035934,0.0368798079393686],["2023-04-30","WEGE3.SA",0.0139588262480719,0.0140567055596907],["2023-05-31","WEGE3.SA",-0.0892244773176474,-0.0853597654581257],["2023-06-30","WEGE3.SA",0.00530944512984366,0.00532356521251098],["2023-07-31","WEGE3.SA",0.0596325809746996,0.0614464792598586],["2023-08-31","WEGE3.SA",-0.106697426238354,-0.101202415582325],["2023-09-30","WEGE3.SA",0.0125419224734036,0.0126209022236508],["2023-10-31","WEGE3.SA",-0.0941804028840472,-0.0898814405830629],["2023-11-30","WEGE3.SA",0.0351225597688138,0.035746641889999],["2023-12-31","WEGE3.SA",0.0785482081054267,0.0817155013602633],["2024-01-31","WEGE3.SA",-0.132177802531688,-0.123814806716787],["2024-02-29","WEGE3.SA",0.134514642499532,0.143981409627015],["2024-03-31","WEGE3.SA",0.041786011267829,0.0426713349594472],["2024-04-30","WEGE3.SA",0.0347301393383921,0.0353402734858275],["2024-05-31","WEGE3.SA",-0.047110153079557,-0.046017692286547]],"name":"WEGE3.SA","type":"line"},{"data":[["2019-06-30","PRIO3.SA",-0.0966351821113429,-0.0921128407991231],["2019-07-31","PRIO3.SA",0.109789463986573,0.116043078462048],["2019-08-31","PRIO3.SA",-0.0405852166894449,-0.0397726663697023],["2019-09-30","PRIO3.SA",0.0303053410593486,0.0307692220736817],["2019-10-31","PRIO3.SA",0.0601517694778018,0.0619977131533163],["2019-11-30","PRIO3.SA",0.228964345248735,0.257297209591379],["2019-12-31","PRIO3.SA",0.351588998778208,0.421324237657421],["2020-01-31","PRIO3.SA",0.371417543429578,0.449788296601889],["2020-02-29","PRIO3.SA",-0.195975787838818,-0.177967862388149],["2020-03-31","PRIO3.SA",-0.858357175274334,-0.57614216520725],["2020-04-30","PRIO3.SA",0.202574199077048,0.224550942300831],["2020-05-31","PRIO3.SA",0.415358981109008,0.514914468768206],["2020-06-30","PRIO3.SA",0.133087462831807,0.142349907119469],["2020-07-31","PRIO3.SA",0.112147277958562,0.1186776050671],["2020-08-31","PRIO3.SA",0.056470517942842,0.058095419510741],["2020-09-30","PRIO3.SA",-0.18284684146162,-0.167104288941523],["2020-10-31","PRIO3.SA",-0.1079434311478,-0.102321624370485],["2020-11-30","PRIO3.SA",0.471160445822887,0.601851977516058],["2020-12-31","PRIO3.SA",0.335788556977966,0.3990431756174],["2021-01-31","PRIO3.SA",0.00426495964518248,0.00427406752921922],["2021-02-28","PRIO3.SA",0.17069232893004,0.186125756295193],["2021-03-31","PRIO3.SA",0.0986642472093768,0.10369566844147],["2021-04-30","PRIO3.SA",-0.00761446228318619,-0.00758554570653069],["2021-05-31","PRIO3.SA",0.0743652841317446,0.0772002177844808],["2021-06-30","PRIO3.SA",-0.0122387734773546,-0.0121641842927125],["2021-07-31","PRIO3.SA",-0.0878979519730736,-0.0841456669176309],["2021-08-31","PRIO3.SA",0.0713430076294506,0.073949535582575],["2021-09-30","PRIO3.SA",0.266328911416653,0.305164271526069],["2021-10-31","PRIO3.SA",-0.063952476827112,-0.0619504224362716],["2021-11-30","PRIO3.SA",-0.145594831473408,-0.135492096371707],["2021-12-31","PRIO3.SA",0.0185552235000892,0.0187284413664015],["2022-01-31","PRIO3.SA",0.14603150616272,0.15723264743654],["2022-02-28","PRIO3.SA",0.0764344742766943,0.0794314574927693],["2022-03-31","PRIO3.SA",-0.0810437270949764,-0.077846632524893],["2022-04-30","PRIO3.SA",0.114557937121918,0.121377608573153],["2022-05-31","PRIO3.SA",0.0471836717083165,0.0483145371200233],["2022-06-30","PRIO3.SA",-0.241259465346134,-0.21436224583122],["2022-07-31","PRIO3.SA",0.0965909047907787,0.101409700011424],["2022-08-31","PRIO3.SA",0.12007420071101,0.127580515751357],["2022-09-30","PRIO3.SA",0.0080234258743781,0.00805569981386944],["2022-10-31","PRIO3.SA",0.251152951221885,0.285506689114183],["2022-11-30","PRIO3.SA",0.018477506751823,0.0186492721809979],["2022-12-31","PRIO3.SA",0.0316707419747018,0.0321775965921425],["2023-01-31","PRIO3.SA",0.123470151598186,0.131416233071725],["2023-02-28","PRIO3.SA",-0.222549866165872,-0.199524910868603],["2023-03-31","PRIO3.SA",-0.0774002716239073,-0.0744806796668422],["2023-04-30","PRIO3.SA",0.108082028136242,0.114139132394808],["2023-05-31","PRIO3.SA",-0.0162464543528849,-0.0161151925211679],["2023-06-30","PRIO3.SA",0.0811446180581039,0.0845277275201068],["2023-07-31","PRIO3.SA",0.207268413004822,0.230312759410068],["2023-08-31","PRIO3.SA",0.0173841933360634,0.0175361778571239],["2023-09-30","PRIO3.SA",0.0132680133304759,0.0133564239979389],["2023-10-31","PRIO3.SA",0.0139330460797704,0.0140305633441311],["2023-11-30","PRIO3.SA",-0.0378129145722874,-0.0371069326975014],["2023-12-31","PRIO3.SA",0.00421414631396999,0.00422303831489113],["2024-01-31","PRIO3.SA",-0.0471302811991308,-0.0460368939632604],["2024-02-29","PRIO3.SA",-0.0050205770048195,-0.00500799497324822],["2024-03-31","PRIO3.SA",0.108923194704478,0.115076703256692],["2024-04-30","PRIO3.SA",-0.0152990717263206,-0.0151826354735994],["2024-05-31","PRIO3.SA",-0.123345344501204,-0.116041660308838]],"name":"PRIO3.SA","type":"line"},{"data":[["2019-06-30","EMBR3.SA",0.0239844175305244,0.0242743570423638],["2019-07-31","EMBR3.SA",-0.0051653205362423,-0.00515200320741172],["2019-08-31","EMBR3.SA",-0.0730329113454959,-0.0704297638848514],["2019-09-30","EMBR3.SA",-0.00223094988496086,-0.00222846316585856],["2019-10-31","EMBR3.SA",-0.0214454694500366,-0.0212171504189885],["2019-11-30","EMBR3.SA",0.0264580197932842,0.0268111406129345],["2019-12-31","EMBR3.SA",0.0917685389369565,0.096111085679796],["2020-01-31","EMBR3.SA",-0.0840208857928544,-0.0805879467550999],["2020-02-29","EMBR3.SA",-0.0672618346580762,-0.0650496331245275],["2020-03-31","EMBR3.SA",-0.57536409492063,-0.4374999718846],["2020-04-30","EMBR3.SA",-0.0979342046183205,-0.0932914409729081],["2020-05-31","EMBR3.SA",-0.190446906799222,-0.173410357146086],["2020-06-30","EMBR3.SA",0.123516379887678,0.131468537717852],["2020-07-31","EMBR3.SA",-0.0611655605135026,-0.0593325105092785],["2020-08-31","EMBR3.SA",-0.0361243260032293,-0.0354796289342278],["2020-09-30","EMBR3.SA",-0.162358717713411,-0.149863809073886],["2020-10-31","EMBR3.SA",-0.0342331001683729,-0.033653777085345],["2020-11-30","EMBR3.SA",0.295117063240238,0.343283598613202],["2020-12-31","EMBR3.SA",0.0885533933503413,0.0925925882319423],["2021-01-31","EMBR3.SA",-0.00680279476649037,-0.00677970813903339],["2021-02-28","EMBR3.SA",0.330277204912237,0.391353765109473],["2021-03-31","EMBR3.SA",0.135879464416441,0.145543806481617],["2021-04-30","EMBR3.SA",0.094596107962873,0.0992148013518894],["2021-05-31","EMBR3.SA",0.115182318463517,0.122077994460019],["2021-06-30","EMBR3.SA",0.0880236007425972,0.0920138940629029],["2021-07-31","EMBR3.SA",-0.0149495939135202,-0.0148384035078233],["2021-08-31","EMBR3.SA",0.230966551485797,0.259817099734326],["2021-09-30","EMBR3.SA",-0.0124599214671939,-0.0123826180436647],["2021-10-31","EMBR3.SA",-0.053274863614317,-0.0518806268539027],["2021-11-30","EMBR3.SA",-0.13607522220969,-0.127223022193432],["2021-12-31","EMBR3.SA",0.25986941334489,0.296760735961555],["2022-01-31","EMBR3.SA",-0.200536418183912,-0.181708311214134],["2022-02-28","EMBR3.SA",-0.143214425578468,-0.133431765422595],["2022-03-31","EMBR3.SA",-0.162518948622259,-0.150000016255812],["2022-04-30","EMBR3.SA",-0.0514340303027372,-0.0501336897117347],["2022-05-31","EMBR3.SA",-0.109199312615115,-0.103448294375972],["2022-06-30","EMBR3.SA",-0.10763068290654,-0.102040833131095],["2022-07-31","EMBR3.SA",0.0267372913182982,0.02709793977163],["2022-08-31","EMBR3.SA",0.162263555667172,0.17617018679355],["2022-09-30","EMBR3.SA",-0.170810648989813,-0.157018822301902],["2022-10-31","EMBR3.SA",0.165732676845054,0.180257549376183],["2022-11-30","EMBR3.SA",-0.0146522627104968,-0.0145454406738281],["2022-12-31","EMBR3.SA",0.054572061489595,0.0560885769877335],["2023-01-31","EMBR3.SA",0.133269297783065,0.142557645145594],["2023-02-28","EMBR3.SA",0.0145721927251916,0.0146788847411998],["2023-03-31","EMBR3.SA",0.225672032506894,0.253164600621435],["2023-04-30","EMBR3.SA",-0.0681686791150233,-0.0658971033623278],["2023-05-31","EMBR3.SA",-0.0208123856070719,-0.0205973026240385],["2023-06-30","EMBR3.SA",-0.0255604716658322,-0.0252365683850653],["2023-07-31","EMBR3.SA",-0.00161947056818912,-0.00161815993333547],["2023-08-31","EMBR3.SA",0.0515903628252037,0.052944329017738],["2023-09-30","EMBR3.SA",-0.123830042651217,-0.116470009462367],["2023-10-31","EMBR3.SA",0.0212591082994624,0.0214866930306121],["2023-11-30","EMBR3.SA",0.200722367709455,0.222285378822856],["2023-12-31","EMBR3.SA",0.0405614682170388,0.0413953204487645],["2024-01-31","EMBR3.SA",0.0172685848108518,0.0174185487998442],["2024-02-29","EMBR3.SA",0.0699289095999869,0.0724319389286745],["2024-03-31","EMBR3.SA",0.310045795671683,0.363487554530808],["2024-04-30","EMBR3.SA",0.00120003317496398,0.00120075350288484],["2024-05-31","EMBR3.SA",0.0943557433583222,0.0989506207719484]],"name":"EMBR3.SA","type":"line"},{"data":[["2019-06-30","^BVSP",0.039773521742033,0.0405750798722029],["2019-07-31","^BVSP",0.00833424458262577,0.00836907108263096],["2019-08-31","^BVSP",-0.00667171735680938,-0.00664951086315924],["2019-09-30","^BVSP",0.0350725669610501,0.0356948633015284],["2019-10-31","^BVSP",0.0233539734332826,0.0236288128311606],["2019-11-30","^BVSP",0.00940351227061953,0.00944786420444044],["2019-12-31","^BVSP",0.0689934874418459,0.0714292313804472],["2020-01-31","^BVSP",-0.0191800416595562,-0.0189972750163847],["2020-02-29","^BVSP",-0.0880563772546292,-0.0842907499055034],["2020-03-31","^BVSP",-0.35531000297018,-0.299043888952885],["2020-04-30","^BVSP",0.0975983395809852,0.102519857573268],["2020-05-31","^BVSP",0.0821978912067181,0.0856706332447268],["2020-06-30","^BVSP",0.0839365845981916,0.0875599235724176],["2020-07-31","^BVSP",0.0794080625030613,0.0826460191886893],["2020-08-31","^BVSP",-0.0350340603232286,-0.0344274720149268],["2020-09-30","^BVSP",-0.0491510057646423,-0.0479626442854398],["2020-10-31","^BVSP",-0.00690517447658046,-0.00688138853947595],["2020-11-30","^BVSP",0.147535817477777,0.158974795640328],["2020-12-31","^BVSP",0.0913717901874662,0.0956762912350297],["2021-01-31","^BVSP",-0.0280410871039649,-0.0276515849999166],["2021-02-28","^BVSP",-0.0528520371117764,-0.0514796520899599],["2021-03-31","^BVSP",0.0582423296065322,0.0599718271459078],["2021-04-30","^BVSP",0.0191915132418359,0.0193768540905743],["2021-05-31","^BVSP",0.0597623851052873,0.0615842683398669],["2021-06-30","^BVSP",0.00463208979424401,0.00464283450592551],["2021-07-31","^BVSP",-0.0402382493266806,-0.0394394410182808],["2021-08-31","^BVSP",-0.0251071039446966,-0.0247945419167327],["2021-09-30","^BVSP",-0.0679404672534076,-0.0656839056751503],["2021-10-31","^BVSP",-0.069759719730115,-0.0673821173375139],["2021-11-30","^BVSP",-0.015442141958804,-0.0153235234442183],["2021-12-31","^BVSP",0.0281245409844804,0.0285237698081728],["2022-01-31","^BVSP",0.0696934966741587,0.0721795043025326],["2022-02-28","^BVSP",0.0066864967785083,0.00670890130618984],["2022-03-31","^BVSP",0.0588397424411493,0.0606052571105333],["2022-04-30","^BVSP",-0.106500990064951,-0.101025841882015],["2022-05-31","^BVSP",0.0317049550055248,0.0322129111201745],["2022-06-30","^BVSP",-0.12220452111835,-0.115032644520481],["2022-07-31","^BVSP",0.0458467950009798,0.0469140062105506],["2022-08-31","^BVSP",0.0598049246249612,0.0616294285852761],["2022-09-30","^BVSP",0.00468210000905955,0.00469307816622977],["2022-10-31","^BVSP",0.0530924328937061,0.0545271136072416],["2022-11-30","^BVSP",-0.031080336308742,-0.0306023078845541],["2022-12-31","^BVSP",-0.0220666251852286,-0.0218249382145338],["2023-01-31","^BVSP",0.0313225912393573,0.0318183057501973],["2023-02-28","^BVSP",-0.0787722141962011,-0.075749568403621],["2023-03-31","^BVSP",-0.0294972404571752,-0.029066443029772],["2023-04-30","^BVSP",0.0247208610359309,0.0250289550656642],["2023-05-31","^BVSP",0.0366921362658079,0.0373736019610837],["2023-06-30","^BVSP",0.0861933627792126,0.0900170766603605],["2023-07-31","^BVSP",0.0321320815025654,0.0326538907754448],["2023-08-31","^BVSP",-0.0521901463334622,-0.0508516273996874],["2023-09-30","^BVSP",0.00708548122232955,0.00711064263620842],["2023-10-31","^BVSP",-0.0297877136111158,-0.0293484322052067],["2023-11-30","^BVSP",0.118128651445039,0.125388884960757],["2023-12-31","^BVSP",0.0524294496547935,0.0538282115117286],["2024-01-31","^BVSP",-0.0491285602794651,-0.0479412751052641],["2024-02-29","^BVSP",0.00987654656552905,0.00992548061869813],["2024-03-31","^BVSP",-0.00710938489079638,-0.00708417299643416],["2024-04-30","^BVSP",-0.0171794958479783,-0.0170327697375611],["2024-05-31","^BVSP",-0.0258791505609768,-0.0255471554270834]],"name":"^BVSP","type":"line"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false},"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
