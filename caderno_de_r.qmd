@@ -773,3 +773,127 @@ prices_monthly %>%
   facet_wrap(. ~ asset) +
   labs(title = "Monthly Returns Since 2019", x = "Monthly Returns", y = "Distribution")
 ```
+
+# AULA 7
+
+## EXERCICIOS
+
+### 1) Determinado agente possui uma carteira formada pelas seguintes posicoes: R$ 25000,00 no ativo A e R$50000,00 no ativo B.
+
+#### a)  Quais os pesos de sua carteira?
+
+Para calcular o peso, basta dividir o vaslor investido no ativo pelo total da carteira:
+```{r}
+w_a <- 25000 / (25000 + 50000)
+
+w_b <- 50000 / (25000 + 50000)
+
+
+print(paste0("PESO ATIVO A:", round(w_a, 2)))
+
+print(paste0("PESO ATIVO B:", round(w_b, 2)))
+```
+
+#### b) Se para a manutencao destas posicoes o agente tivesse emprestado R$40000,00 ao Banco X, qual seria a estrutura dos pesos de sua carteira?
+
+Considerando que o emprestimo esta sendo utilizado para manter a posicao da carteira, precisamos recalcular os pesos considerando o emprestimo - apesar do emprestimo nao entrar como um ativo na carteira, ele reduz proporcionalmente o pe4so dos ativos em relação ao valor total utilizado para alavancar a carteira:
+
+```{r}
+w_a <- 25000 / (25000 + 50000 + 40000)
+
+w_b <- 50000 / (25000 + 50000 + 40000)
+
+w_x <- 40000 / (25000 + 50000 + 40000)
+
+print(paste0("PESO ATIVO A:", round(w_a, 2)))
+
+print(paste0("PESO ATIVO B:", round(w_b, 2)))
+
+print(paste0("PESO BANCO X:", round(w_x, 2)))
+```
+
+### 3) Obtenha a partir do arquivo *prices* um arquivo organizado da forma longa de log retornos diarios dos ativos na classe tibble sendo que as colunas devem ser denominadas *date* *asset* e *returns* e denomine o arquivo de: *assets_daily_returns_long*.
+
+```{r}
+library(timetk)
+library(quantmod)
+library(tidyverse)
+library(tibbletime)
+
+symbols <- c("SPY","EFA", "IJS", "EEM","AGG")
+prices <- 
+  getSymbols(symbols, 
+             src = 'yahoo', 
+             from = "2012-12-31",
+             to = "2017-12-31",
+             auto.assign = TRUE, 
+             warnings = FALSE) %>% 
+  map(~Ad(get(.))) %>% 
+  reduce(merge) %>%
+  `colnames<-`(symbols)
+
+assets_daily_returns_long <- prices %>%
+                              as.data.frame() %>%
+                              mutate(date = index(prices)) %>%
+                              pivot_longer(cols = all_of(symbols), names_to = "asset", values_to = "return") %>%
+                              group_by(asset) %>%
+                              mutate(returns = (log(return) - log(lag(return)))) %>%
+                              select(-return) %>%
+                              arrange(date, asset) %>%
+                              na.omit()
+```
+
+### 4) Como obteria os retornos mensais no ambiente tidyverse a partir dos log-retornos diarios?
+
+Podemos fazer algo semelhante ao abaixo:
+```{r}
+assets_daily_returns_long %>%
+  mutate(year_month = format(date, "%Y-%m")) %>%
+  group_by(year_month, asset) %>%
+  select(-date) %>%
+  summarise(returns = sum(returns, na.rm = TRUE))
+```
+
+### 5) 
+#### a) Coloque num unico grafico utilizando ggplot2::geom_histogram() o histograma de todos os ativos e do portfolio utilize alpha = 0.20 para os ativos.
+
+```{r}
+# calculando retorno mensal p / cada ativo e atribuindo peso
+monthly_returns_w_weights <- assets_daily_returns_long %>%
+                              mutate(year_month = format(date, "%Y-%m")) %>%
+                              group_by(year_month, asset) %>%
+                              select(-date) %>%
+                              summarise(returns = sum(returns, na.rm = TRUE)) %>%
+                              ungroup() %>%
+                              mutate(
+                                weigths = case_when(
+                                  asset == "SPY" ~ .25,
+                                  asset == "EFA" ~ .25,
+                                  asset == "IJS" ~ .2,
+                                  asset == "EEM" ~ .2,
+                                  asset == "AGG" ~ .1 
+                                )
+                              )
+
+# calculando retorno do portfolio
+monthly_returns_w_weights <- monthly_returns_w_weights %>%
+                                mutate(weigthed_returns = returns * weigths) %>%
+                                group_by(year_month)  %>%
+                                mutate(portfolio_returns = sum(weigthed_returns))
+
+monthly_returns_w_weights %>%
+  ggplot() +
+  geom_histogram(aes(returns, fill = asset), alpha = .2) +
+  geom_histogram(aes(portfolio_returns), alpha = .5)
+
+```
+
+#### b) Adicione ao grafico anterior a densidade do retorno do portfolio em preto.
+
+```{r}
+monthly_returns_w_weights %>%
+  ggplot() +
+  geom_histogram(aes(returns, fill = asset), alpha = .2) +
+  geom_histogram(aes(portfolio_returns), alpha = .5) +
+  geom_density(aes(portfolio_returns), fill = "black", alpha = .4)
+```
