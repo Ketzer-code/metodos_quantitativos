@@ -1,7 +1,10 @@
 ---
 title: "Caderno de R"
 author: "Lucas Ketzer dos Reis"
-format: html
+format: docx
+execute:
+  warning: false
+  message: false
 ---
 # AULA 2
 
@@ -632,147 +635,7 @@ prices %>%
   ) 
 ```
 
-### 10) Analise da carteira escolhida
 
-Comecamos escolhendo os tickers dos ativos no yahoofinance:
-
-```{r}
-ativos <- c("ITUB4.SA", "WEGE3.SA", "PRIO3.SA", "EMBR3.SA", "^BVSP")
-```
-
-As empresas sao, respectivamente: Itau, Weg, PetroRio e Embraer, com o indice ibovespa como comparativo. Em seguida, obtemos os retornos dos ultimos 5 anos:
-
-```{r}
-library(lubridate)
-
-prices <- getSymbols(
-  ativos,
-  src = "yahoo",
-  from = (today() - 1) %m-% years(5),
-  to = today() - 1,
-  auto.assign = TRUE,
-  warnings = FALSE
-) %>%
-map(~Ad(get(.))) %>%
-reduce(merge) %>%
-"colnames<-"(ativos)
-```
-
-Com os precos em maos, calculamos os retornos mensais:
-```{r}
-prices_monthly <- prices %>% 
-                      to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
-                      tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
-                      tbl_time(index = "date") %>%
-                      pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
-                      group_by(asset) %>%  
-                      mutate(returns = (log(returns) - log(lag(returns))))
-```
-
-Nota-se que ha alguns valores nulos. P/ evitar problemas de visualizacao, omitimos os valores nulos
-
-```{r}
-prices_monthly <- prices_monthly %>%
-                    na.omit()
-```
-
-Alem dos log retornos, eh interessante calcular os retornos lineares:
-
-```{r}
-prices_monthly <- prices_monthly %>%
-                    mutate(linear_returns = exp(returns) - 1) %>%
-                    ungroup()
-```
-
-Apos o tratamento, 5 meses foram perdidos, o que no total nao prejudica a totalidade da analise. Agora iremos visualizar os log retornos uttilizando o pacote highcharter:
-
-```{r highchart visualization}
-library(highcharter)
-
-chart <- highchart(type = "stock") %>%
-          hc_title(text = "Monthly Log Returns in the last 5 years")
-
-# ao inves de adicionar cada ativo manualmente, usamos um loop
-
-for (a in ativos) {
-  series_data <- prices_monthly %>%
-                  filter(asset == !!a) %>%
-                  select(date, returns)
-
-  chart <- chart %>%
-            hc_add_series(
-              data = list_parse2(series_data),
-              name = a,
-              type = "line"
-            )
-}
-
-chart %>%
-  hc_add_theme(hc_theme_flat()) %>% 
-  hc_navigator(enabled=FALSE) %>% 
-  hc_scrollbar(enabled=FALSE) %>% 
-  hc_exporting(enabled=FALSE) %>% 
-  hc_legend(enabled=TRUE)
-```
-
-Pela analise visual, podemos observar que boa parte dos ativos mantiveram performance acima do ibov - no entanto, eh necessario realizar algum tipo de analise descritiva para confirmar:
-```{r}
-prices_monthly %>%
-  select(-linear_returns) %>%
-  pivot_wider(names_from = "asset", values_from = "returns") %>%
-  mutate(across(2:5, ~if_else(.x > !!sym("^BVSP"), 1, 0), .names = "{.col}_superior_ibov")) %>%
-  select(-all_of(ativos)) %>%
-  pivot_longer(cols = ends_with("superior_ibov"), values_to = "outperforms_ibov") %>%
-  mutate(name = str_replace(name, "_superior_ibov", "")) %>%
-  group_by(name) %>%
-  summarise(
-    outperforms_ibov = sum(outperforms_ibov),
-    total_months = length(date),
-    total_months_outperforming = sum(outperforms_ibov) / length(date)
-  )
-```
-
-Vemos que todos os ativos superaram a performance do indice BOVESPA em 50% do periodo, com destaque para PetroRio, que superou a performance do indice em 63% do periodo.
-
-Continuando as visualizacoes, uma boa forma de verificar a volatilidade dos ativos eh utilizando um histograma:
-
-```{r}
-hc_hist_fun <- function(asset_nm, df, color){
-  hist_tmp <- hist(
-    df %>% filter(asset == asset_nm) %>% select(returns) %>% pull(),
-    breaks = 50,
-    plot = FALSE
-  )
-
-  hchart(hist_tmp, color = color) %>%
-  hc_title(text = paste(asset_nm, "Log Returns Distribution", sep = " ")) %>%
-  hc_add_theme(hc_theme_flat()) %>%
-  hc_exporting(enabled = FALSE) %>%
-  hc_legend(enabled = TRUE)
-}
-
-map(ativos, hc_hist_fun, prices_monthly, "blue")
-```
-
-Para facilitar a visualizacao, podemos refaze-la com ggplot2:
-```{r}
-prices_monthly %>%
-  ggplot(., aes(returns, fill = asset)) +
-  geom_histogram(alpha = .45) +
-  facet_wrap(. ~ asset) +
-  labs(title = "Monthly Returns Since 2019") 
-```
-
-Analisando os histogramas, percebemos que o ativo da empresa Itau possui os retornos mais consistentes (no sentido de, menos volateis), enquanto a empresa PetroRio e Embraer apresentam mais volatilidade. Para incrementar essa visualizacao, podemos incluir a densidade de retornos:
-
-```{r}
-prices_monthly %>%
-  ggplot(., aes(returns, fill = asset)) +
-  geom_density(alpha = .45) +
-  geom_histogram(alpha = .45) +
-  facet_wrap(. ~ asset) +
-  labs(title = "Monthly Returns Since 2019", x = "Monthly Returns", y = "Distribution")
-```
 
 # AULA 7
 
@@ -896,4 +759,304 @@ monthly_returns_w_weights %>%
   geom_histogram(aes(returns, fill = asset), alpha = .2) +
   geom_histogram(aes(portfolio_returns), alpha = .5) +
   geom_density(aes(portfolio_returns), fill = "black", alpha = .4)
+```
+
+## ANALISE DA CARTEIRA ESCOLHIDA
+
+Comecamos escolhendo os tickers dos ativos no yahoofinance:
+
+```{r}
+library(timetk)
+library(quantmod)
+library(tidyverse)
+library(tibbletime)
+
+ativos <- c("ITUB4.SA", "WEGE3.SA", "PRIO3.SA", "EMBR3.SA", "ABCB4.SA", "AGRO3.SA", "SMTO3.SA", "^BVSP")
+```
+
+As empresas sao, respectivamente: 
+- Itau: Empresa tradicional do setor bancario voltado para concessao de credito no varejo 
+- Weg: Multinacional brasileira focada em fabricacao de motores, geradores, etc
+- PetroRio: Empresa focada na producao de petrolo e gas
+- Embraer: Multinacional da aviacao, com atuacao em aviacao comercial, agricola e defesa
+- Banco ABC do Brasil: Banco controlado pela Arab Banking Corporation, voltado para concessao de credito para empresas de medio e grande porte
+- BrasilAgro: Empresa do setor agricola que trabalha com aquisicao e estruturacao de terras para revenda ou para producao de alimentos
+- Sao Martinho SA: Empresa do setor de energia atraves da moagem da cana, produzindo, alem de energia em larga escala, produtos como etanol, etc
+
+Por fim, temos o indice IBOVESPA, para fins de comparacao. A ideia de estruturar a carteira dessa forma eh escolher empresas de setores com participacao expressiva na economia brasileira e que tenham resiliencia frente a instabilidades economicas, ao mesmo tempo que consigam aproveitar altas de booms de commodities.
+
+
+```{r}
+library(lubridate)
+
+prices <- getSymbols(
+  ativos,
+  src = "yahoo",
+  from = (today() - 1) %m-% years(5),
+  to = today() - 1,
+  auto.assign = TRUE,
+  warnings = FALSE
+) %>%
+map(~Ad(get(.))) %>%
+reduce(merge) %>%
+"colnames<-"(ativos)
+```
+
+Com os precos em maos, calculamos os retornos mensais:
+```{r}
+prices_monthly <- prices %>% 
+                      to.monthly(indexAt = "lastof", OHLC = FALSE) %>%
+                      tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+                      tbl_time(index = "date") %>%
+                      pivot_longer(cols = -date, names_to = "asset", values_to = "returns") %>%
+                      group_by(asset) %>%  
+                      mutate(returns = (log(returns) - log(lag(returns))))
+```
+
+Nota-se que ha alguns valores nulos. P/ evitar problemas de visualizacao, omitimos os valores nulos
+
+```{r}
+prices_monthly <- prices_monthly %>%
+                    na.omit()
+```
+
+Alem dos log retornos, eh interessante calcular os retornos lineares:
+
+```{r}
+prices_monthly <- prices_monthly %>%
+                    mutate(linear_returns = exp(returns) - 1) %>%
+                    ungroup()
+```
+
+Apos o tratamento, apenas 1 mes foi perdido, o que nao prejudica a totalidade da analise. Agora iremos visualizar os log retornos uttilizando o pacote highcharter:
+
+```{r}
+library(highcharter)
+library(htmlwidgets)
+library(webshot2)
+
+
+chart <- highchart(type = "stock") %>%
+          hc_title(text = "Monthly Log Returns in the last 5 years")
+
+# ao inves de adicionar cada ativo manualmente, usamos um loop
+
+for (a in ativos) {
+  series_data <- prices_monthly %>%
+                  filter(asset == !!a) %>%
+                  select(date, returns)
+
+  chart <- chart %>%
+            hc_add_series(
+              data = list_parse2(series_data),
+              name = a,
+              type = "line"
+            )
+}
+
+chart_1 <- chart %>%
+            hc_add_theme(hc_theme_flat()) %>% 
+            hc_navigator(enabled=FALSE) %>% 
+            hc_scrollbar(enabled=FALSE) %>% 
+            hc_exporting(enabled=FALSE) %>% 
+            hc_legend(enabled=TRUE)
+
+saveWidget(chart_1, "chart_1.html", selfcontained = TRUE)
+
+webshot("chart_1.html", file = "chart_1.png")
+
+knitr::include_graphics("chart_1.png")
+```
+
+Pela analise visual, podemos observar que boa parte dos ativos mantiveram performance acima do ibov - no entanto, eh necessario realizar algum tipo de analise descritiva para confirmar:
+```{r}
+prices_monthly %>%
+  select(-linear_returns) %>%
+  pivot_wider(names_from = "asset", values_from = "returns") %>%
+  mutate(across(2:9, ~ifelse(.x > !!sym("^BVSP"), 1, 0), .names = "{.col}_superior_ibov")) %>%
+  select(-all_of(ativos)) %>%
+  pivot_longer(cols = ends_with("superior_ibov"), values_to = "outperforms_ibov") %>%
+  mutate(name = str_replace(name, "_superior_ibov", "")) %>%
+  group_by(name) %>%
+  summarise(
+    outperforms_ibov = sum(outperforms_ibov),
+    total_months = length(date),
+    total_months_outperforming = sum(outperforms_ibov) / length(date)
+  )
+```
+
+Vemos que todos os ativos superaram a performance do indice BOVESPA em 50% do periodo, com destaque para PetroRio, que superou a performance do indice em 63% do periodo.
+
+Continuando as visualizacoes, uma boa forma de verificar a volatilidade dos ativos eh utilizando um histograma:
+
+```{r}
+hc_hist_fun <- function(asset_nm, df, color){
+  hist_tmp <- hist(
+    df %>% filter(asset == asset_nm) %>% select(returns) %>% pull(),
+    breaks = 50,
+    plot = FALSE
+  )
+
+  hist <- hchart(hist_tmp, color = color) %>%
+            hc_title(text = paste(asset_nm, "Log Returns Distribution", sep = " ")) %>%
+            hc_add_theme(hc_theme_flat()) %>%
+            hc_exporting(enabled = FALSE) %>%
+            hc_navigator(enabled=FALSE) %>% 
+            hc_scrollbar(enabled=FALSE) %>% 
+            hc_exporting(enabled=FALSE) %>%
+            hc_legend(enabled = TRUE)
+
+    saveWidget(hist, paste0("hist_", asset_nm, ".html"), selfcontained = TRUE)
+    webshot(paste0("hist_", asset_nm, ".html"), file = paste0("hist_", asset_nm, ".png"))
+}
+
+map(ativos, hc_hist_fun, prices_monthly, "blue")
+
+
+knitr::include_graphics("hist_^BVSP.png")
+knitr::include_graphics("hist_ABCB4.SA.png")
+knitr::include_graphics("hist_AGRO3.SA.png")
+knitr::include_graphics("hist_EMBR3.SA.png")
+knitr::include_graphics("hist_ITUB4.SA.png")
+knitr::include_graphics("hist_PRIO3.SA.png")
+knitr::include_graphics("hist_SMTO3.SA.png")
+knitr::include_graphics("hist_WEGE3.SA.png")
+
+```
+
+Para facilitar a visualizacao, podemos refaze-la com ggplot2:
+```{r}
+prices_monthly %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_histogram(alpha = .45) +
+  facet_wrap(. ~ asset) +
+  labs(title = "Monthly Returns Since 2019") 
+```
+
+Analisando os histogramas, percebemos que o ativo das empresas Itau, Banco ABC e Brasil Agro possui os retornos mais consistentes (no sentido de, menos volateis), enquanto a empresa PetroRio e Embraer apresentam mais volatilidade. Para incrementar essa visualizacao, podemos incluir a densidade de retornos:
+
+```{r}
+prices_monthly %>%
+  ggplot(., aes(returns, fill = asset)) +
+  geom_density(alpha = .45) +
+  geom_histogram(alpha = .45) +
+  facet_wrap(. ~ asset) +
+  labs(title = "Monthly Returns Since 2019", x = "Monthly Returns", y = "Distribution")
+```
+
+Alem disso, podemos calcular o desvio padrao e media dos retornos:
+```{r}
+prices_monthly %>%
+  group_by(asset) %>%
+  summarise(
+    desvio_padrao = sd(returns) * 100,
+    media = mean(returns) * 100
+  )
+```
+
+Com base no que analisamos, podemos, por fim, atribuir os pesos dos ativos na carteira. Como Itau e Banco ABC possuem retornos mais consistentes (apesar de menores), iremos alocar 20% da posicao em cada um desses dois ativos - em seguida, iremos alocar 15% em WEG e PetroRio (retornos maiores apesar de mais volateis) e distribuiremos os 30% restantes igualmente em Sao Martinho SA, Brasil Agro e Embraer
+
+```{r}
+prices_monthly <- prices_monthly %>%
+                    mutate(
+                      weight = case_when(
+                        asset %in% c("ABCB4.SA", "ITUB4.SA") ~ .2,
+                        asset %in% c("WEGE3.SA", "PRIO3.SA") ~ .15,
+                        asset %in% c("AGRO3.SA", "SMTO3.SA", "EMBR3.SA") ~ .1,
+                        TRUE ~ 1 # o peso do IBOV eh 1
+                      ),
+                      asset_type = ifelse(asset == "^BVSP", "BENCHMARK", "PORTFOLIO")
+                    ) %>%
+                    mutate(
+                      weigthed_returns = returns * weight
+                    )
+```
+
+Por fim, calculaos o retorno da carteira e o retorno do ibov mensalmente e verificamos em quantos meses a carteira performou melhor que o IBOV:
+
+```{r}
+prices_monthly %>%
+  group_by(date, asset_type) %>%
+  summarise(returns = sum(weigthed_returns)) %>%
+  pivot_wider(names_from = "asset_type", values_from = "returns") %>%
+  mutate(outperforms_ibov = ifelse(PORTFOLIO > BENCHMARK, 1, 0)) %>%
+  ungroup() %>%
+  pivot_longer(cols = c("PORTFOLIO", "BENCHMARK"), names_to = "asset_type", values_to = "returns") %>%
+  group_by(asset_type) %>%
+  summarise(
+    outperforms_ibov = sum(outperforms_ibov),
+    total_months = length(date),
+    total_months_outperforming = sum(outperforms_ibov) / length(date)
+  )
+```
+
+A carteira performou melhor do que o IBOVESPA em 60% do periodo - agora, consolidando o retorno nos ultimos 5 anos:
+```{r}
+prices_monthly %>%
+  group_by(asset_type) %>%
+  summarise(returns = sum(weigthed_returns)) 
+```
+
+A carteira perfomou melhor do que o IBOVESPA no periodo. Por fim, adicionamos uma analise grafica:
+```{r}
+chart <- highchart(type = "stock") %>%
+          hc_title(text = "Monthly Portfolio Log Returns in the last 5 years")
+
+chart <- chart %>%
+          hc_add_series(
+            data = list_parse2(
+              prices_monthly %>% 
+                filter(asset_type == "BENCHMARK") %>%  
+                group_by(date) %>%
+                summarise(returns = sum(weigthed_returns)) %>% 
+                select(date, returns)
+            ),
+            name = "BENCHMARK",
+            type = "line"
+          )
+
+chart <- chart %>% 
+            hc_add_series(
+              data = list_parse2(
+                prices_monthly %>% 
+                filter(asset_type == "PORTFOLIO") %>%
+                group_by(date) %>%
+                summarise(returns = sum(weigthed_returns)) %>% 
+                select(date, returns)
+              ),
+              name = "PORTFOLIO",
+              type = "line"
+          )
+
+chart_2 <- chart %>%
+            hc_add_theme(hc_theme_flat()) %>% 
+            hc_navigator(enabled=FALSE) %>% 
+            hc_scrollbar(enabled=FALSE) %>% 
+            hc_exporting(enabled=FALSE) %>% 
+            hc_legend(enabled=TRUE)
+
+saveWidget(chart_2, "chart_2.html", selfcontained = TRUE)
+
+webshot("chart_2.html", file = "chart_2.png")
+
+knitr::include_graphics("chart_2.png")
+```
+
+Ou via ggplot:
+```{r}
+prices_monthly %>%
+  group_by(date, asset_type) %>%
+  summarise(returns = sum(weigthed_returns)) %>% 
+  ggplot(., aes(returns, fill = asset_type)) +
+  geom_density(alpha = .45) +
+  geom_histogram(alpha = .45) +
+  labs(title = "Monthly Returns Since 2019", x = "Monthly Returns", y = "Distribution")
+
+prices_monthly %>%
+  group_by(date, asset_type) %>%
+  summarise(returns = sum(weigthed_returns)) %>% 
+  ggplot(., aes(date, returns, group = asset_type, colour = asset_type)) +
+  geom_line() +
+  labs(title = "Monthly Returns Since 2019", x = "Date", y = "Returns")
+
 ```
