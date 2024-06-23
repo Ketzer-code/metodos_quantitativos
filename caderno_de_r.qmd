@@ -6,6 +6,17 @@ execute:
   warning: false
   message: false
 ---
+```{r}
+library(here)
+library(timetk)
+library(quantmod)
+library(webshot2)
+library(tidyverse)
+library(lubridate)
+library(tibbletime)
+library(highcharter)
+library(htmlwidgets)
+```
 # AULA 2
 
 **OBS: nao foram utilizados acentos ortograficos para evitar erros ou caracteres nao reconhecidos no envio das tarefas**
@@ -23,9 +34,7 @@ O primeiro grafico apresentado eh o grafico de pontos, que comumente eh utilizad
 #| fig-cap: "Grafico de pontos/dispersao"
 #| warning: false
 
-library(tidyverse)
-
-base <- read.csv("LucroFilmes.csv", sep = ";")
+base <- read.csv(here("./caderno_de_r_files/LucroFilmes.csv"), sep = ";")
 
 base <- base %>%
           mutate(DataLancamento = as.Date(DataLancamento, format = "%m/%d/%Y")) %>%
@@ -517,10 +526,6 @@ ativos <- c("PETR4.SA", "VALE3.SA", "JBSS3.SA", "BBDC3.SA", "^BVSP")
 
 ### 2) Obtenha os precos dos ativos do exercicio 1 para o ultimo ano.
 ```{r}
-library(timetk)
-library(quantmod)
-library(tidyverse)
-library(tibbletime)
 prices <- getSymbols(
   ativos,
   src = "yahoo",
@@ -678,11 +683,6 @@ print(paste0("PESO BANCO X:", round(w_x, 2)))
 ### 3) Obtenha a partir do arquivo *prices* um arquivo organizado da forma longa de log retornos diarios dos ativos na classe tibble sendo que as colunas devem ser denominadas *date* *asset* e *returns* e denomine o arquivo de: *assets_daily_returns_long*.
 
 ```{r}
-library(timetk)
-library(quantmod)
-library(tidyverse)
-library(tibbletime)
-
 symbols <- c("SPY","EFA", "IJS", "EEM","AGG")
 prices <- 
   getSymbols(symbols, 
@@ -766,11 +766,6 @@ monthly_returns_w_weights %>%
 Comecamos escolhendo os tickers dos ativos no yahoofinance:
 
 ```{r}
-library(timetk)
-library(quantmod)
-library(tidyverse)
-library(tibbletime)
-
 ativos <- c("ITUB4.SA", "WEGE3.SA", "PRIO3.SA", "EMBR3.SA", "ABCB4.SA", "AGRO3.SA", "SMTO3.SA", "^BVSP")
 ```
 
@@ -787,8 +782,6 @@ Por fim, temos o indice IBOVESPA, para fins de comparacao. A ideia de estruturar
 
 
 ```{r}
-library(lubridate)
-
 prices <- getSymbols(
   ativos,
   src = "yahoo",
@@ -831,11 +824,6 @@ prices_monthly <- prices_monthly %>%
 Apos o tratamento, apenas 1 mes foi perdido, o que nao prejudica a totalidade da analise. Agora iremos visualizar os log retornos uttilizando o pacote highcharter:
 
 ```{r}
-library(highcharter)
-library(htmlwidgets)
-library(webshot2)
-
-
 chart <- highchart(type = "stock") %>%
           hc_title(text = "Monthly Log Returns in the last 5 years")
 
@@ -861,11 +849,11 @@ chart_1 <- chart %>%
             hc_exporting(enabled=FALSE) %>% 
             hc_legend(enabled=TRUE)
 
-saveWidget(chart_1, "chart_1.html", selfcontained = TRUE)
+saveWidget(chart_1, here("./caderno_de_r_files/chart_1.html"), selfcontained = TRUE)
 
-webshot("chart_1.html", file = "chart_1.png")
+webshot(here("./caderno_de_r_files/chart_1.html"), file = here("./caderno_de_r_files/chart_1.png"))
 
-knitr::include_graphics("chart_1.png")
+knitr::include_graphics(here("./caderno_de_r_files/chart_1.png"))
 ```
 
 Pela analise visual, podemos observar que boa parte dos ativos mantiveram performance acima do ibov - no entanto, eh necessario realizar algum tipo de analise descritiva para confirmar:
@@ -906,21 +894,26 @@ hc_hist_fun <- function(asset_nm, df, color){
             hc_exporting(enabled=FALSE) %>%
             hc_legend(enabled = TRUE)
 
-    saveWidget(hist, paste0("hist_", asset_nm, ".html"), selfcontained = TRUE)
-    webshot(paste0("hist_", asset_nm, ".html"), file = paste0("hist_", asset_nm, ".png"))
+    if(asset_nm != "^BVSP") {
+        saveWidget(hist, here(paste0("./caderno_de_r_files/hist_", asset_nm, ".html")), selfcontained = TRUE)
+        webshot(here(paste0("./caderno_de_r_files/hist_", asset_nm, ".html")), file = here(paste0("./caderno_de_r_files/hist_", asset_nm, ".png")))
+    } else {
+      saveWidget(hist, here("./caderno_de_r_files/hist_IBOV.html"), selfcontained = TRUE)
+      webshot(here("./caderno_de_r_files/hist_IBOV.html"), file = here("./caderno_de_r_files/hist_IBOV.png"))
+    }
 }
 
 map(ativos, hc_hist_fun, prices_monthly, "blue")
 
 
-knitr::include_graphics("hist_^BVSP.png")
-knitr::include_graphics("hist_ABCB4.SA.png")
-knitr::include_graphics("hist_AGRO3.SA.png")
-knitr::include_graphics("hist_EMBR3.SA.png")
-knitr::include_graphics("hist_ITUB4.SA.png")
-knitr::include_graphics("hist_PRIO3.SA.png")
-knitr::include_graphics("hist_SMTO3.SA.png")
-knitr::include_graphics("hist_WEGE3.SA.png")
+knitr::include_graphics(here("./caderno_de_r_files/hist_IBOV.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_ABCB4.SA.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_AGRO3.SA.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_EMBR3.SA.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_ITUB4.SA.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_PRIO3.SA.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_SMTO3.SA.png"))
+knitr::include_graphics(here("./caderno_de_r_files/hist_WEGE3.SA.png"))
 
 ```
 
@@ -1035,11 +1028,11 @@ chart_2 <- chart %>%
             hc_exporting(enabled=FALSE) %>% 
             hc_legend(enabled=TRUE)
 
-saveWidget(chart_2, "chart_2.html", selfcontained = TRUE)
+saveWidget(chart_2, here("./caderno_de_r_files/chart_2.html"), selfcontained = TRUE)
 
-webshot("chart_2.html", file = "chart_2.png")
+webshot(here("./caderno_de_r_files/chart_2.html"), file = here("./caderno_de_r_files/chart_2.png"))
 
-knitr::include_graphics("chart_2.png")
+knitr::include_graphics(here("./caderno_de_r_files/chart_2.png"))
 ```
 
 Ou via ggplot:
